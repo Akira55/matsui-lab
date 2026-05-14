@@ -1,0 +1,48 @@
+---
+import type { Locale } from '../data/site';
+import { site } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const labels: Record<Locale, string> = {
+  en: 'Full record on',
+  ja: '完全な業績は',
+};
+
+const items = [
+  { label: 'researchmap', href: site.socials.researchmap, bg: 'bg-pop-blue-soft' },
+  site.socials.googleScholar && {
+    label: 'Google Scholar',
+    href: site.socials.googleScholar,
+    bg: 'bg-pop-cyan-soft',
+  },
+  site.socials.orcid && { label: 'ORCID', href: site.socials.orcid, bg: 'bg-pop-yellow-soft' },
+  site.socials.dblp && { label: 'DBLP', href: site.socials.dblp, bg: 'bg-pop-purple-soft' },
+  site.socials.semanticScholar && {
+    label: 'Semantic Scholar',
+    href: site.socials.semanticScholar,
+    bg: 'bg-pop-yellow-soft',
+  },
+  site.socials.arxiv && { label: 'arXiv', href: site.socials.arxiv, bg: 'bg-pop-cyan-soft' },
+  { label: 'Kobe U faculty', href: site.socials.kobe, bg: 'bg-pop-blue-soft' },
+].filter(Boolean) as { label: string; href: string; bg: string }[];
+---
+
+<div class="sticker mt-8 flex flex-col gap-3 bg-white p-5 sm:flex-row sm:items-center">
+  <p class="font-display text-sm text-pop-ink/80 shrink-0">{labels[locale]}:</p>
+  <div class="flex flex-wrap gap-2">
+    {items.map((i) => (
+      <a
+        href={i.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class:list={['chip transition-transform hover:-translate-y-0.5', i.bg]}
+      >
+        {i.label} ↗
+      </a>
+    ))}
+  </div>
+</div>

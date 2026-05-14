@@ -1,0 +1,91 @@
+---
+import type { Locale } from '../data/site';
+import { site } from '../data/site';
+import { nav, ui } from '../data/i18n';
+import { u } from '../lib/url';
+
+interface Props {
+  locale: Locale;
+  current?: string;
+}
+
+const { locale, current } = Astro.props;
+
+const localePrefix = locale === 'ja' ? '/ja' : '';
+const otherLocalePrefix = locale === 'ja' ? '' : '/ja';
+const homeHref = u(`${localePrefix}/`);
+const otherHref = u(`${otherLocalePrefix}/`);
+
+const items = [
+  { key: 'research', href: u(`${localePrefix}/research/`) },
+  { key: 'members', href: u(`${localePrefix}/members/`) },
+  { key: 'publications', href: u(`${localePrefix}/publications/`) },
+  { key: 'talks', href: u(`${localePrefix}/talks/`) },
+  { key: 'news', href: u(`${localePrefix}/news/`) },
+  { key: 'join', href: u(`${localePrefix}/join/`) },
+  { key: 'contact', href: u(`${localePrefix}/contact/`) },
+];
+---
+
+<header class="sticky top-0 z-40 border-b-[3px] border-pop-ink bg-pop-paper/95 backdrop-blur">
+  <div class="container-page flex h-20 items-center justify-between">
+    <a href={homeHref} class="group flex items-center gap-3">
+      <span class="relative inline-flex h-9 items-center justify-center rounded-full border-[3px] border-pop-ink bg-pop-blue px-3.5 text-white shadow-sticker-sm transition-transform group-hover:rotate-[-3deg]">
+        <span class="font-display text-base leading-none tracking-wide">MatLab</span>
+      </span>
+      <span class="hidden font-display text-xl tracking-wide text-pop-ink sm:inline">
+        {site.labName[locale]}
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex">
+      {items.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'rounded-full px-3 py-1.5 font-display text-sm transition-all',
+            current === item.key
+              ? 'bg-pop-yellow text-pop-ink border-2 border-pop-ink shadow-sticker-sm'
+              : 'text-pop-ink hover:bg-pop-blue-soft hover:-translate-y-0.5 border-2 border-transparent',
+          ]}
+        >
+          {nav[locale][item.key]}
+        </a>
+      ))}
+      <a
+        href={otherHref}
+        class="ml-2 rounded-full border-2 border-pop-ink bg-pop-cyan px-3 py-1.5 font-display text-xs text-pop-ink shadow-sticker-sm transition-transform hover:-translate-y-0.5"
+      >
+        {ui[locale].languageLabel}
+      </a>
+    </nav>
+
+    <details class="md:hidden">
+      <summary class="cursor-pointer list-none rounded-full border-2 border-pop-ink bg-white p-2 shadow-sticker-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+      </summary>
+      <div class="absolute left-0 right-0 top-20 border-b-[3px] border-pop-ink bg-pop-paper shadow-sticker">
+        <ul class="container-page flex flex-col gap-1 py-4">
+          {items.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="block rounded-xl border-2 border-transparent px-3 py-2 font-display text-pop-ink hover:border-pop-ink hover:bg-pop-blue-soft"
+              >
+                {nav[locale][item.key]}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a
+              href={otherHref}
+              class="block rounded-xl border-2 border-pop-ink bg-pop-cyan px-3 py-2 font-display text-pop-ink shadow-sticker-sm"
+            >
+              {ui[locale].languageLabel}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</header>

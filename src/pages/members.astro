@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MemberCard from '../components/MemberCard.astro';
+import { members } from '../data/members';
+import { u } from '../lib/url';
+
+const pi = members.filter((m) => m.role.en.toLowerCase().includes('principal'));
+const others = members.filter((m) => !m.role.en.toLowerCase().includes('principal'));
+---
+
+<Layout locale="en" current="members" title="Members">
+  <section class="container-page section">
+    <p class="heading-eyebrow">People</p>
+    <h1 class="heading-display mt-4">
+      The <span class="bg-pop-cyan text-pop-ink px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">crew</span>
+    </h1>
+
+    <h2 class="mt-12 font-display text-2xl text-pop-ink">Principal Investigator</h2>
+    <div class="mt-6 grid gap-6">
+      {pi.map((m) => <MemberCard member={m} locale="en" />)}
+    </div>
+
+    {others.length > 0 && (
+      <>
+        <h2 class="mt-14 font-display text-2xl text-pop-ink">Lab Members</h2>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2">
+          {others.map((m) => <MemberCard member={m} locale="en" />)}
+        </div>
+      </>
+    )}
+
+    {others.length === 0 && (
+      <div class="mt-8 sticker max-w-prose bg-pop-yellow-soft p-6">
+        <p class="font-display text-lg text-pop-ink">We're recruiting! 🎉</p>
+        <p class="mt-2 text-pop-ink/80">
+          Looking for students and collaborators excited about computational social science.
+          See the <a class="link" href={u('/join/')}>Join Us</a> page.
+        </p>
+      </div>
+    )}
+  </section>
+</Layout>

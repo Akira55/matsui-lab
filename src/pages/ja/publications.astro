@@ -1,0 +1,140 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PublicationList from '../../components/PublicationList.astro';
+import { site } from '../../data/site';
+import { awards, grants } from '../../data/awards';
+import { books } from '../../data/publications';
+import Sparkle from '../../components/Sparkle.astro';
+import ProfileLinks from '../../components/ProfileLinks.astro';
+import { u } from '../../lib/url';
+
+const sections = [
+  { id: 'papers', label: '論文' },
+  { id: 'books', label: '書籍' },
+  { id: 'awards', label: '受賞' },
+  { id: 'grants', label: '科研費' },
+];
+---
+
+<Layout locale="ja" current="publications" title="論文">
+  <section class="container-page section">
+    <p class="heading-eyebrow">Publications</p>
+    <h1 class="heading-display mt-4">
+      <span class="bg-pop-yellow text-pop-ink px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">論文</span>・書籍・受賞・科研費
+    </h1>
+    <p class="mt-6 max-w-2xl text-pop-ink/80">
+      査読付き論文・書籍・受賞・助成のみを掲載しています。講演は
+      <a class="link" href={u('/ja/talks/')}>講演ページ</a>、
+      コラム・プレプリント・WPは
+      <a class="link" href={u('/ja/misc/')}>MISCページ</a>
+      にあります。
+    </p>
+
+    <ProfileLinks locale="ja" />
+
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label="セクション">
+      {sections.map((s) => (
+        <a
+          href={`#${s.id}`}
+          class="rounded-full border-2 border-pop-ink bg-white px-3 py-1 font-display text-xs shadow-sticker-sm transition-transform hover:-translate-y-0.5 hover:bg-pop-blue-soft"
+        >
+          {s.label}
+        </a>
+      ))}
+      <a
+        href={u('/ja/talks/')}
+        class="rounded-full border-2 border-pop-ink bg-pop-cyan-soft px-3 py-1 font-display text-xs shadow-sticker-sm transition-transform hover:-translate-y-0.5"
+      >
+        講演 →
+      </a>
+      <a
+        href={u('/ja/misc/')}
+        class="rounded-full border-2 border-pop-ink bg-pop-purple-soft px-3 py-1 font-display text-xs shadow-sticker-sm transition-transform hover:-translate-y-0.5"
+      >
+        MISC →
+      </a>
+    </nav>
+
+    <section id="papers" class="mt-12 scroll-mt-24">
+      <PublicationList />
+    </section>
+
+    {books.length > 0 && (
+      <section id="books" class="mt-16 scroll-mt-24">
+        <div class="flex items-baseline gap-3">
+          <h2 class="font-display text-3xl">書籍</h2>
+          <span class="h-[3px] flex-1 bg-pop-ink"></span>
+        </div>
+        <ul class="mt-5 grid gap-3 md:grid-cols-2">
+          {books.map((b) => (
+            <li class="sticker-sm bg-pop-purple-soft p-4">
+              <p class="font-display text-base">
+                {b.url ? (
+                  <a href={b.url} target="_blank" rel="noopener noreferrer" class="hover:underline decoration-pop-yellow decoration-2 underline-offset-4">
+                    {b.title} <span class="text-pop-blue" aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  b.title
+                )}
+              </p>
+              <p class="text-sm text-pop-ink/70">{b.role} · {b.publisher} · {b.year}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section id="awards" class="mt-16 scroll-mt-24">
+      <div class="flex items-baseline gap-3">
+        <h2 class="font-display text-3xl">受賞 <Sparkle class="h-6 w-6 align-baseline" /></h2>
+        <span class="h-[3px] flex-1 bg-pop-ink"></span>
+      </div>
+      <ul class="mt-5 grid gap-3">
+        {awards.map((a) => (
+          <li class="sticker-sm bg-pop-yellow-soft p-4">
+            <div class="flex flex-wrap items-baseline gap-3">
+              <span class="font-display text-lg">{a.year}</span>
+              <span class="font-display">
+                {a.url ? (
+                  <a href={a.url} target="_blank" rel="noopener noreferrer" class="hover:underline decoration-pop-blue decoration-2 underline-offset-4">
+                    {a.title} <span class="text-pop-blue" aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  a.title
+                )}
+              </span>
+            </div>
+            {a.org && <p class="text-sm text-pop-ink/70">{a.org}</p>}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="grants" class="mt-16 scroll-mt-24">
+      <div class="flex items-baseline gap-3">
+        <h2 class="font-display text-3xl">科研費・助成</h2>
+        <span class="h-[3px] flex-1 bg-pop-ink"></span>
+      </div>
+      <ul class="mt-5 grid gap-3">
+        {grants.map((g) => (
+          <li class="sticker-sm bg-pop-cyan-soft p-4">
+            <div class="flex flex-wrap items-baseline gap-3">
+              <span class="font-display text-sm tabular-nums">{g.period}</span>
+              <span class="chip bg-white">{g.role}</span>
+            </div>
+            <p class="mt-1 font-display">
+              {g.url ? (
+                <a href={g.url} target="_blank" rel="noopener noreferrer" class="hover:underline decoration-pop-blue decoration-2 underline-offset-4">
+                  {g.title} <span class="text-pop-blue" aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                g.title
+              )}
+            </p>
+            <p class="text-sm text-pop-ink/70">{g.funder}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </section>
+</Layout>

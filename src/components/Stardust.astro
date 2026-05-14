@@ -1,0 +1,97 @@
+---
+// Lingering star/sparkle particles. Spawns particles with staggered delays so
+// they trail off gradually after the intro animation finishes. Pure CSS, plays
+// exactly once (animation-iteration-count: 1, fill-mode: forwards).
+//
+// Tune particle count via NUM. Each particle gets a randomized position,
+// size, color, delay and duration in [BASE_DELAY, BASE_DELAY + SPREAD] seconds.
+
+const NUM = 36;
+const BASE_DELAY = 0.9; // start during intro tail
+const SPREAD = 3.5;     // last particles still flying ~4.4s after load
+
+const colors = ['#ffd23f', '#ff5d8f', '#23d3e8', '#7c5cff', '#2563eb'];
+const glyphs = ['✦', '✧', '★', '☆', '✨', '·'];
+
+type Particle = {
+  left: number;
+  top: number;
+  size: number;
+  delay: number;
+  duration: number;
+  color: string;
+  glyph: string;
+  rotate: number;
+  driftX: number;
+  driftY: number;
+};
+
+const particles: Particle[] = Array.from({ length: NUM }, (_, i) => ({
+  left: Math.random() * 100,
+  top: Math.random() * 80, // bias upward; particles will drift down
+  size: 0.6 + Math.random() * 1.6, // rem
+  delay: BASE_DELAY + Math.random() * SPREAD,
+  duration: 1.4 + Math.random() * 1.6,
+  color: colors[i % colors.length],
+  glyph: glyphs[Math.floor(Math.random() * glyphs.length)],
+  rotate: Math.random() * 360,
+  driftX: (Math.random() - 0.5) * 80, // px
+  driftY: 40 + Math.random() * 120, // px (always downward)
+}));
+---
+
+<div class="stardust" aria-hidden="true">
+  {particles.map((p) => (
+    <span
+      class="dust"
+      style={`--left:${p.left}%;--top:${p.top}%;--size:${p.size}rem;--delay:${p.delay}s;--duration:${p.duration}s;--color:${p.color};--rotate:${p.rotate}deg;--dx:${p.driftX}px;--dy:${p.driftY}px;`}
+    >{p.glyph}</span>
+  ))}
+</div>
+
+<style is:global>
+  .stardust {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50; /* below intro overlay (z=100), above page content */
+    overflow: hidden;
+  }
+
+  .dust {
+    position: absolute;
+    left: var(--left);
+    top: var(--top);
+    font-size: var(--size);
+    color: var(--color);
+    text-shadow: 2px 2px 0 #0b1d44;
+    line-height: 1;
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.3) rotate(0deg);
+    animation: dust-fall var(--duration) cubic-bezier(0.22, 1, 0.36, 1) var(--delay) forwards;
+    will-change: transform, opacity;
+  }
+
+  @keyframes dust-fall {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, -10px, 0) scale(0.3) rotate(0deg);
+    }
+    20% {
+      opacity: 1;
+      transform: translate3d(calc(var(--dx) * 0.2), calc(var(--dy) * 0.15), 0) scale(1.2) rotate(calc(var(--rotate) * 0.3));
+    }
+    65% {
+      opacity: 1;
+      transform: translate3d(calc(var(--dx) * 0.7), calc(var(--dy) * 0.6), 0) scale(1) rotate(calc(var(--rotate) * 0.7));
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(var(--dx), var(--dy), 0) scale(0.5) rotate(var(--rotate));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stardust { display: none; }
+  }
+</style>

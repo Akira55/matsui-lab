@@ -1,0 +1,70 @@
+---
+import { publications } from '../data/publications';
+import Sparkle from './Sparkle.astro';
+
+interface Props {
+  limit?: number;
+}
+const { limit } = Astro.props;
+const items = limit ? publications.slice(0, limit) : publications;
+
+const grouped = items.reduce<Record<number, typeof items>>((acc, p) => {
+  (acc[p.year] ||= []).push(p);
+  return acc;
+}, {});
+const years = Object.keys(grouped)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+const typeChip: Record<string, string> = {
+  journal: 'bg-pop-blue-soft',
+  conference: 'bg-pop-cyan-soft',
+  preprint: 'bg-pop-yellow-soft',
+  chapter: 'bg-pop-purple-soft',
+  book: 'bg-pop-ink text-pop-paper',
+};
+---
+
+<div class="space-y-10">
+  {years.map((year) => (
+    <section>
+      <div class="flex items-baseline gap-3">
+        <h3 class="font-display text-3xl text-pop-ink">{year}</h3>
+        <span class="h-[3px] flex-1 bg-pop-ink"></span>
+      </div>
+      <ol class="mt-5 space-y-3">
+        {grouped[year].map((p) => (
+          <li class="sticker-sm p-4 transition-transform hover:-translate-y-0.5">
+            <div class="flex flex-wrap items-center gap-2">
+              {p.type && (
+                <span class:list={['chip', typeChip[p.type] || 'bg-pop-cyan-soft']}>{p.type}</span>
+              )}
+              {p.highlight && (
+                <span class="inline-flex items-center gap-1 rounded-full border-2 border-pop-ink bg-pop-yellow px-2 py-0.5 font-display text-[10px]">
+                  <Sparkle class="h-3 w-3" /> highlight
+                </span>
+              )}
+              <span class="text-xs text-pop-ink/60">{p.authors}</span>
+            </div>
+            <p class="mt-2 font-display text-base leading-snug text-pop-ink">
+              {p.url ? (
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="decoration-pop-yellow decoration-2 underline-offset-4 hover:underline hover:text-pop-blue"
+                >
+                  {p.title}
+                  <span aria-hidden="true" class="ml-1 text-pop-blue">↗</span>
+                </a>
+              ) : (
+                p.title
+              )}
+            </p>
+            <p class="mt-1 text-sm italic text-pop-ink/70">{p.venue}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</div>

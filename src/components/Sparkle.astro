@@ -1,0 +1,15 @@
+---
+interface Props {
+  class?: string;
+  color?: string;
+}
+const { class: cls = '', color = '#ffd23f' } = Astro.props;
+---
+<svg
+  viewBox="0 0 24 24"
+  class={`inline-block ${cls}`}
+  fill={color}
+  aria-hidden="true"
+>
+  <path d="M12 0 L14 9 L23 11 L14 13 L12 22 L10 13 L1 11 L10 9 Z" stroke="#0b1d44" stroke-width="1.2" stroke-linejoin="round" />
+</svg>

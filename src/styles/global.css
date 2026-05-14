@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Set by an inline <head> script when the intro has already played in this browser. */
+  html.no-intro .intro,
+  html.no-intro .stardust {
+    display: none !important;
+  }
+
+  body {
+    @apply bg-pop-paper text-pop-ink;
+    font-feature-settings: 'palt';
+    background-image:
+      radial-gradient(circle at 0% 0%, #dbeafe66 0%, transparent 45%),
+      radial-gradient(circle at 100% 0%, #cbf3f855 0%, transparent 45%),
+      radial-gradient(circle at 50% 100%, #fff3b330 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-pop-ink;
+    letter-spacing: 0.01em;
+  }
+
+  ::selection {
+    @apply bg-pop-yellow text-pop-ink;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-6 sm:px-8;
+  }
+
+  .section {
+    @apply py-16 sm:py-24;
+  }
+
+  .heading-eyebrow {
+    @apply inline-block rounded-full border-2 border-pop-ink bg-pop-yellow px-3 py-1 font-display text-xs tracking-wider text-pop-ink;
+  }
+
+  .heading-display {
+    @apply font-display text-5xl leading-tight text-pop-ink sm:text-6xl;
+  }
+
+  .heading-kana {
+    @apply font-kana;
+  }
+
+  .link {
+    @apply font-semibold text-pop-blue underline decoration-wavy decoration-pop-yellow decoration-2 underline-offset-4 hover:text-pop-purple;
+  }
+
+  /* Sticker = thick black border + offset shadow, very common kawaii UI motif */
+  .sticker {
+    @apply rounded-2xl border-[3px] border-pop-ink bg-white shadow-sticker;
+  }
+  .sticker-sm {
+    @apply rounded-xl border-2 border-pop-ink bg-white shadow-sticker-sm;
+  }
+
+  .btn-pop {
+    @apply inline-flex items-center gap-2 rounded-full border-[3px] border-pop-ink bg-pop-blue px-5 py-2.5 font-display text-white shadow-sticker transition-transform hover:-translate-y-0.5 hover:translate-x-0;
+  }
+  .btn-pop-secondary {
+    @apply inline-flex items-center gap-2 rounded-full border-[3px] border-pop-ink bg-white px-5 py-2.5 font-display text-pop-ink shadow-sticker transition-transform hover:-translate-y-0.5;
+  }
+
+  /* Manga halftone dot grid */
+  .halftone {
+    background-image: radial-gradient(#0b1d44 1px, transparent 1.2px);
+    background-size: 10px 10px;
+  }
+
+  /* Speech bubble with tail */
+  .speech {
+    @apply relative inline-block rounded-2xl border-[3px] border-pop-ink bg-white px-4 py-2 shadow-sticker-sm;
+  }
+  .speech::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 28px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-right: 3px solid #0b1d44;
+    border-bottom: 3px solid #0b1d44;
+    transform: rotate(45deg);
+  }
+
+  /* Tag chip */
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border-2 border-pop-ink bg-pop-cyan-soft px-3 py-1 font-display text-xs;
+  }
+}

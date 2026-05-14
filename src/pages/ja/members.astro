@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import MemberCard from '../../components/MemberCard.astro';
+import { members } from '../../data/members';
+import { u } from '../../lib/url';
+
+const pi = members.filter((m) => m.role.en.toLowerCase().includes('principal'));
+const others = members.filter((m) => !m.role.en.toLowerCase().includes('principal'));
+---
+
+<Layout locale="ja" current="members" title="メンバー">
+  <section class="container-page section">
+    <p class="heading-eyebrow">People</p>
+    <h1 class="heading-display mt-4">
+      <span class="bg-pop-cyan text-pop-ink px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">メンバー</span>
+    </h1>
+
+    <h2 class="mt-12 font-display text-2xl text-pop-ink">主宰者</h2>
+    <div class="mt-6 grid gap-6">
+      {pi.map((m) => <MemberCard member={m} locale="ja" />)}
+    </div>
+
+    {others.length > 0 && (
+      <>
+        <h2 class="mt-14 font-display text-2xl text-pop-ink">研究室メンバー</h2>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2">
+          {others.map((m) => <MemberCard member={m} locale="ja" />)}
+        </div>
+      </>
+    )}
+
+    {others.length === 0 && (
+      <div class="mt-8 sticker max-w-prose bg-pop-yellow-soft p-6">
+        <p class="font-display text-lg text-pop-ink">学生・共同研究者 募集中！🎉</p>
+        <p class="mt-2 text-pop-ink/80">
+          計算社会科学に関心のある仲間を歓迎します。詳しくは
+          <a class="link" href={u('/ja/join/')}>参加希望者へ</a>
+          をご覧ください。
+        </p>
+      </div>
+    )}
+  </section>
+</Layout>

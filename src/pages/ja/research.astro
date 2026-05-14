@@ -1,0 +1,62 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Sparkle from '../../components/Sparkle.astro';
+
+const themes = [
+  {
+    emoji: '🌐',
+    color: 'bg-pop-blue-soft',
+    title: 'プラットフォームとユーザー行動',
+    body:
+      'プラットフォームの設計・推薦・インセンティブは、人々の閲覧・視聴・共有をどう形作るのか。行動ログと準実験的デザインから、注意・選択・処置効果を切り分けます。',
+  },
+  {
+    emoji: '📚',
+    color: 'bg-pop-cyan-soft',
+    title: 'ウィキペディアと知識生産',
+    body:
+      'Wikipedia編集から学術出版まで、分散コミュニティによる知識の共同生成と体系的バイアス（地方政治家の都市・地方格差など）を調べます。',
+  },
+  {
+    emoji: '💬',
+    color: 'bg-pop-yellow-soft',
+    title: 'テキスト・言語と埋め込み',
+    body:
+      '単語埋め込み・トピックモデル・大規模言語モデルを計測器として、金融政策・政治コミュニケーション・イデオロギーなど社会経済的構成概念を可視化します。',
+  },
+  {
+    emoji: '⚠️',
+    color: 'bg-pop-purple-soft',
+    title: 'オンラインの有害行動',
+    body:
+      '誹謗中傷・欺瞞・協調行動の検出と分析。「アンチ」だけでなく「ファン」が有害コミュニケーションの源になり得る点にも注目します。',
+  },
+];
+---
+
+<Layout locale="ja" current="research" title="研究" description="松井研究室の研究テーマ">
+  <section class="container-page section">
+    <p class="heading-eyebrow">Research</p>
+    <h1 class="heading-display mt-4">
+      何を<span class="bg-pop-blue text-white px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">研究</span>しているか
+      <Sparkle class="h-8 w-8 align-baseline animate-sparkle" />
+    </h1>
+    <p class="mt-6 max-w-3xl text-lg text-pop-ink/80">
+      松井研究室は<strong>計算社会科学</strong>と<strong>ウェブ情報学</strong>の境界領域に位置します。デジタル痕跡データ・統計的推測・機械学習を用いて、行動・コミュニケーション・知識生成に関する社会科学的な問いに取り組みます。
+    </p>
+  </section>
+
+  <section class="border-y-[3px] border-pop-ink bg-pop-paper">
+    <div class="container-page section">
+      <div class="grid gap-8 md:grid-cols-2">
+        {themes.map((t) => (
+          <article class:list={['sticker p-7 transition-transform hover:-translate-y-1', t.color]}>
+            <div class="text-3xl">{t.emoji}</div>
+            <h2 class="mt-3 font-display text-2xl text-pop-ink">{t.title}</h2>
+            <p class="mt-3 text-pop-ink/80">{t.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

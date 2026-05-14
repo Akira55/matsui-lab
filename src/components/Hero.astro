@@ -1,0 +1,101 @@
+---
+import type { Locale } from '../data/site';
+import { site } from '../data/site';
+import Sparkle from './Sparkle.astro';
+import { u } from '../lib/url';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const cta =
+  locale === 'ja'
+    ? { research: '研究を見る', members: 'メンバー' }
+    : { research: 'See research', members: 'Meet the team' };
+const researchHref = u(locale === 'ja' ? '/ja/research/' : '/research/');
+const membersHref = u(locale === 'ja' ? '/ja/members/' : '/members/');
+const charSrc = u('/charactor.png');
+
+const bubble = locale === 'ja' ? 'はじめまして！' : 'Welcome!';
+---
+
+<section class="relative overflow-hidden border-b-[3px] border-pop-ink bg-gradient-pop">
+  <!-- Decorative manga halftone -->
+  <div aria-hidden="true" class="halftone pointer-events-none absolute -right-12 top-10 h-44 w-44 opacity-30"></div>
+  <div aria-hidden="true" class="halftone pointer-events-none absolute -left-10 bottom-10 h-32 w-32 opacity-25"></div>
+
+  <!-- Floating sparkles -->
+  <Sparkle class="absolute left-[8%] top-12 h-6 w-6 animate-sparkle" />
+  <Sparkle class="absolute right-[14%] top-24 h-8 w-8 animate-sparkle [animation-delay:0.7s]" color="#2563eb" />
+  <Sparkle class="absolute right-[8%] bottom-16 h-5 w-5 animate-sparkle [animation-delay:1.2s]" color="#7c5cff" />
+
+  <!-- Mascot character (put public/charactor.png to enable) -->
+  <img
+    src={charSrc}
+    alt=""
+    aria-hidden="true"
+    onerror="this.style.display='none'"
+    class="hero-mascot pointer-events-none absolute bottom-0 right-2 z-10 hidden max-h-[88%] w-auto max-w-[40%] object-contain object-bottom drop-shadow-[6px_6px_0_#0b1d44] animate-float md:block lg:right-8"
+  />
+
+  <div class="container-page section relative">
+    <div class="md:max-w-[60%]">
+    <div class="speech mb-6 animate-float font-kana text-lg">
+      {bubble}
+    </div>
+
+    <p class="heading-eyebrow">{site.affiliation[locale]}</p>
+
+    <h1 class="heading-display mt-5 max-w-4xl">
+      <span class="inline-block bg-pop-blue px-2 text-white -rotate-1 shadow-sticker-sm border-[3px] border-pop-ink rounded-xl">
+        {locale === 'ja' ? 'デジタル痕跡' : 'Digital footprints'}
+      </span>
+      <span class="block mt-3">
+        {locale === 'ja' ? 'から、社会を読み解く。' : 'tell the story of society.'}
+      </span>
+    </h1>
+
+    <p class="mt-7 max-w-2xl text-lg text-pop-ink/80">
+      {site.subTagline[locale]}
+    </p>
+
+    <div class="mt-6 flex flex-wrap gap-2">
+      {site.keywords[locale].map((k, i) => (
+        <span
+          class:list={[
+            'chip',
+            i % 4 === 0 && 'bg-pop-blue-soft',
+            i % 4 === 1 && 'bg-pop-cyan-soft',
+            i % 4 === 2 && 'bg-pop-yellow-soft',
+            i % 4 === 3 && 'bg-pop-purple-soft',
+          ]}
+        >
+          #{k}
+        </span>
+      ))}
+    </div>
+
+    <div class="mt-9 flex flex-wrap gap-3">
+      <a href={researchHref} class="btn-pop">
+        {cta.research}
+        <span aria-hidden="true">→</span>
+      </a>
+      <a href={membersHref} class="btn-pop-secondary">
+        {cta.members}
+      </a>
+    </div>
+    </div>
+  </div>
+
+  <!-- Mobile-only character below content -->
+  <div class="block md:hidden">
+    <img
+      src={charSrc}
+      alt=""
+      aria-hidden="true"
+      onerror="this.style.display='none'"
+      class="mx-auto block w-2/3 max-w-[280px] animate-float drop-shadow-[6px_6px_0_#0b1d44] -mt-4 mb-6"
+    />
+  </div>
+</section>

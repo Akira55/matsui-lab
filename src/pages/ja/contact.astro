@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { site } from '../../data/site';
+---
+
+<Layout locale="ja" current="contact" title="お問い合わせ">
+  <section class="container-page section">
+    <p class="heading-eyebrow">Contact</p>
+    <h1 class="heading-display mt-4">
+      <span class="bg-pop-blue text-white px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">こちら</span>からどうぞ 👋
+    </h1>
+    <p class="mt-6 max-w-2xl text-pop-ink/80">
+      共同研究・大学院進学・講演・取材などのご相談は、下記フォームからご連絡ください。数営業日以内にお返事します。
+    </p>
+
+    <div class="mt-10 grid gap-10 lg:grid-cols-2">
+      <div class="sticker bg-pop-paper p-7">
+        <dl class="space-y-5">
+          <div>
+            <dt class="font-display text-xs tracking-wider text-pop-blue">お問い合わせ</dt>
+            <dd class="mt-2">
+              <a
+                href={site.contactForm}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-pop"
+              >
+                フォームを開く ↗
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt class="font-display text-xs tracking-wider text-pop-blue">所属</dt>
+            <dd class="mt-1">{site.affiliation.ja}</dd>
+          </div>
+          <div>
+            <dt class="font-display text-xs tracking-wider text-pop-blue">所在地</dt>
+            <dd class="mt-1">〒657-8501 兵庫県神戸市灘区六甲台町 2-1</dd>
+          </div>
+          <div>
+            <dt class="font-display text-xs tracking-wider text-pop-blue">プロフィール</dt>
+            <dd class="mt-1 flex flex-wrap gap-2">
+              <a class="chip bg-pop-cyan-soft hover:bg-pop-cyan" href={site.socials.researchmap}>researchmap ↗</a>
+              <a class="chip bg-pop-yellow-soft hover:bg-pop-yellow" href={site.socials.kobe}>神戸大学 ↗</a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="sticker overflow-hidden p-0">
+        <iframe
+          title="神戸大学"
+          class="h-72 w-full"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=135.234%2C34.724%2C135.244%2C34.728&layer=mapnik&marker=34.726%2C135.239"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+</Layout>
