@@ -21,6 +21,7 @@ export const site = {
   socials: {
     researchmap: 'https://researchmap.jp/amrmap',
     kobe: 'https://www.rieb.kobe-u.ac.jp/faculty/global_finance/a_matsui.html',
+    cv: 'https://drive.google.com/file/d/1GHtOea9stCCcV_tRbgtvR9lDEVsj9z6t/view?usp=sharing',
     // Fill these in when ready; the UI hides empty entries.
     googleScholar: '',
     orcid: '',

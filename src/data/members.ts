@@ -31,6 +31,10 @@ export const members: Member[] = [
       ja: 'デジタル痕跡データから社会・経済の構造を読み解く計算社会科学者。南カリフォルニア大学にて計算機科学博士号取得（2022年）。横浜国立大学講師（2022–2025年）を経て現職。',
     },
     links: [
+      {
+        label: 'CV (PDF)',
+        href: 'https://drive.google.com/file/d/1GHtOea9stCCcV_tRbgtvR9lDEVsj9z6t/view?usp=sharing',
+      },
       { label: 'researchmap', href: 'https://researchmap.jp/amrmap' },
       {
         label: 'Kobe U',

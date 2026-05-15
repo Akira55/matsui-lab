@@ -13,6 +13,7 @@ const labels: Record<Locale, string> = {
 };
 
 const items = [
+  site.socials.cv && { label: 'CV (PDF)', href: site.socials.cv, bg: 'bg-pop-pink-soft' },
   { label: 'researchmap', href: site.socials.researchmap, bg: 'bg-pop-blue-soft' },
   site.socials.googleScholar && {
     label: 'Google Scholar',
