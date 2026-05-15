@@ -1,0 +1,53 @@
+name: Sync from researchmap
+
+on:
+  schedule:
+    # 18:00 UTC = 03:00 JST. Cron times are best-effort; GitHub may delay during high load.
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write   # so we can trigger deploy.yml via workflow_dispatch
+
+concurrency:
+  group: sync-researchmap
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sync data from researchmap
+        run: node scripts/sync-researchmap.mjs
+
+      - name: Commit and push if changed
+        id: commit
+        run: |
+          if [ -z "$(git status --porcelain src/data)" ]; then
+            echo "No changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/data
+          git commit -m "chore: sync data from researchmap ($(date -u +%Y-%m-%d))"
+          # Rebase once in case of a concurrent push, then push.
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger deploy
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Pushes made with GITHUB_TOKEN do NOT fire workflow `on: push` triggers.
+        # Explicitly dispatch deploy.yml so the site rebuilds with the synced data.
+        run: gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
