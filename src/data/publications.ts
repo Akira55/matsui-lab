@@ -17,6 +17,14 @@ export type Publication = {
 export const publications: Publication[] = [
   {
     year: 2026,
+    authors: "Matsui, A.",
+    title: "Cross-Platform and Cross-Lingual Dynamics of Wikipedia Sharing and Contribution",
+    venue: "Proceedings of the International AAAI Conference on Web and Social Media",
+    url: "https://doi.org/10.1609/icwsm.v20i1.42713",
+    type: "journal",
+  },
+  {
+    year: 2026,
     authors: "Honna, S. & Matsui, A.",
     title: "Disruptive transformation of artworks in master-disciple relationships: the case of Ukiyo-e artworks",
     venue: "EPJ Data Science",
