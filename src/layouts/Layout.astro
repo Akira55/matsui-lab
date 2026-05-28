@@ -14,6 +14,9 @@ interface Props {
 
 const { locale, title, description, current } = Astro.props;
 const fullTitle = `${title} · ${site.labName[locale]}`;
+
+const gaId = site.gaMeasurementId;
+const enableGA = import.meta.env.PROD && !!gaId;
 ---
 
 <!doctype html>
@@ -45,6 +48,17 @@ const fullTitle = `${title} · ${site.labName[locale]}`;
         /* localStorage may be unavailable (private mode) — show intro by default */
       }
     </script>
+    {enableGA && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+        <script is:inline define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
   </head>
   <body class="flex min-h-screen flex-col">
     <a href="#main" class="sr-only focus:not-sr-only">Skip to content</a>

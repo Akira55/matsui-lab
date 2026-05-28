@@ -18,6 +18,8 @@ export const site = {
   },
   // Contact goes through a Google Form (email intentionally hidden).
   contactForm: 'https://docs.google.com/forms/d/e/1FAIpQLSfvAmGgq_IXLdEaSYVTh67YJcyjDSoMk7zEJLv_2q-ESg48VQ/viewform',
+  // Google Analytics 4 Measurement ID. Leave empty to disable. Only loaded in production builds.
+  gaMeasurementId: 'G-K9QDSXVXFN',
   socials: {
     researchmap: 'https://researchmap.jp/amrmap',
     kobe: 'https://www.rieb.kobe-u.ac.jp/faculty/global_finance/a_matsui.html',
