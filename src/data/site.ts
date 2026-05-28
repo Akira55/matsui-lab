@@ -5,8 +5,8 @@ export const site = {
   },
   // Short, punchy taglines for the hero.
   tagline: {
-    en: 'Decoding society from its digital footprints',
-    ja: 'デジタル痕跡から、社会を読み解く',
+    en: 'Individuals, groups, behavior — decoding how knowledge accumulates and takes shape',
+    ja: '個人、集団、行動。知識の蓄積と構成を読み解く',
   },
   subTagline: {
     en: 'Computational Social Science · Web Information Studies',
