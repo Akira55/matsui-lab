@@ -6,6 +6,7 @@
 
 export type MiscItem = {
   year: number;
+  date?: string;
   authors: string;
   title: string;
   venue: string;
@@ -16,6 +17,7 @@ export type MiscItem = {
 export const misc: MiscItem[] = [
   {
     year: 2025,
+    date: "2025-10",
     type: "column",
     authors: "小林照義 & 松井暉",
     title: "連載『「つながり」から経済を読み解くネットワーク科学』vol.4 一般化ランダム・ネットワーク",
@@ -23,6 +25,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-10",
     type: "working-paper",
     authors: "Sakai, S., Kwak, H., An, J. & Matsui, A.",
     title: "Quantifying Gender Stereotypes in Japan between 1900 and 1999 with Word Embeddings",
@@ -30,6 +33,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-09",
     type: "working-paper",
     authors: "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.",
     title: "Modeling User Redemption Behavior in Complex Incentive Digital Environment: An Empirical Study Using Large-Scale Transactional Data",
@@ -37,6 +41,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-09",
     type: "working-paper",
     authors: "Honna, S., Murayama, T. & Matsui, A.",
     title: "Data-driven Methods of Extracting Text Structure and Information Transfer",
@@ -44,6 +49,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-09",
     type: "working-paper",
     authors: "Matsui, A., Fujikawa, K., Sasaki, R. & Adachi, R.",
     title: "User Exploration and Exploitation Behavior Under the Influence of Real-time Interactions in Live Streaming Environments",
@@ -51,6 +57,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-08",
     type: "column",
     authors: "小林照義 & 松井暉",
     title: "連載『「つながり」から経済を読み解くネットワーク科学』 vol.3 次数分布の再現とネットワーク生成モデル",
@@ -58,6 +65,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-07-29",
     type: "preprint",
     authors: "Matsui, A., Toriumi, F., Yoshida, M., et al.",
     title: "Global Patterns of Knowledge: Language, Genre, and the Geography of Knowledge",
@@ -66,6 +74,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-06",
     type: "column",
     authors: "小林照義, 松井暉",
     title: "連載『「つながり」から経済を読み解くネットワーク科学』 vol.2 つながりの構造に潜む2つの特徴：スモールワールド性とクラスタ性",
@@ -73,6 +82,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-04",
     type: "column",
     authors: "小林照義 & 松井暉",
     title: "連載『「つながり」から経済を読み解くネットワーク科学』 vol.1 「ネットワーク科学」とは何か",
@@ -80,6 +90,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
+    date: "2025-03-15",
     type: "preprint",
     authors: "Murayama, T., Lim, D., Matsui, A. & Tanihara, T.",
     title: "The \"recognition,\" \"belief,\" and \"action\" regarding conspiracy theories: An empirical study using large-scale samples from Japan and the United States",
@@ -88,6 +99,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2024,
+    date: "2024",
     type: "working-paper",
     authors: "松井暉",
     title: "国際会議 IC2S2 2023 参加報告",
@@ -95,6 +107,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2024,
+    date: "2024",
     type: "column",
     authors: "",
     title: "引用されない「引用」",
@@ -102,6 +115,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2023,
+    date: "2023",
     type: "column",
     authors: "",
     title: "コロナ禍と食への関心の変化",
@@ -109,6 +123,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2023,
+    date: "2023",
     type: "column",
     authors: "",
     title: "違法広告掲載サイト閉鎖の帰結",
@@ -116,6 +131,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2022,
+    date: "2022-06-20",
     type: "preprint",
     authors: "Matsui, A. & Ferrara, E.",
     title: "Extracting Fast and Slow: User-Action Embedding with Inter-temporal Information",
@@ -124,6 +140,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2022,
+    date: "2022",
     type: "column",
     authors: "",
     title: "特集『計算社会科学の挑戦』鼎談司会",
@@ -131,6 +148,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2022,
+    date: "2022",
     type: "column",
     authors: "",
     title: "言葉から内面を探る",
@@ -138,6 +156,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2022,
+    date: "2022",
     type: "column",
     authors: "",
     title: "「愛」の文化的発展に迫る",
@@ -145,6 +164,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2022,
+    date: "2022",
     type: "column",
     authors: "",
     title: "「調子の良い」時期のはじまりかた",
@@ -152,6 +172,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2021,
+    date: "2021",
     type: "column",
     authors: "",
     title: "求職サイトにおける採用者の行動を詳細なデータで分析する",
@@ -159,6 +180,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2021,
+    date: "2021",
     type: "column",
     authors: "",
     title: "大規模な投稿データから 機械学習で分析軸を紐解く",
@@ -166,6 +188,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2021,
+    date: "2021",
     type: "column",
     authors: "",
     title: "モバイル端末の位置情報を利用したマーケティング戦略のフィールド実験",
@@ -173,6 +196,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2020,
+    date: "2020-09-04",
     type: "preprint",
     authors: "Matsui, A., Ferrara, E., Morstatter, F., et al.",
     title: "Leveraging Clickstream Trajectories to Reveal Low-Quality Workers in Crowdsourced Forecasting Platforms",
@@ -181,6 +205,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2020,
+    date: "2020-07-08",
     type: "preprint",
     authors: "Moriwaki, D., Hayakawa, Y., Munemasa, I., et al.",
     title: "Unbiased Lift-based Bidding System",
@@ -189,6 +214,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2020,
+    date: "2020",
     type: "column",
     authors: "",
     title: "特集『ネットワーク科学と経済学』鼎談司会",
@@ -196,6 +222,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2020,
+    date: "2020",
     type: "column",
     authors: "",
     title: "機械学習でテキストに隠れたバイアスを 定量化する",
@@ -203,6 +230,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2020,
+    date: "2020",
     type: "column",
     authors: "",
     title: "科学者を科学する",
@@ -210,6 +238,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2019,
+    date: "2019-09",
     type: "working-paper",
     authors: "松井暉",
     title: "グローバルアイ〔第48 回〕TA（Teaching Assistant）",
@@ -217,6 +246,7 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2019,
+    date: "2019",
     type: "column",
     authors: "",
     title: "Botによるフェイクニュース（low-credibility content）の拡散",

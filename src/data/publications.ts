@@ -6,6 +6,7 @@
 
 export type Publication = {
   year: number;
+  date?: string; // raw researchmap publication_date: YYYY | YYYY-MM | YYYY-MM-DD
   authors: string;
   title: string;
   venue: string;
@@ -17,6 +18,16 @@ export type Publication = {
 export const publications: Publication[] = [
   {
     year: 2026,
+    date: "2026-05-25",
+    authors: "Matsui, A.",
+    title: "Cross-Platform and Cross-Lingual Dynamics of Wikipedia Sharing and Contribution",
+    venue: "Proceedings of the International AAAI Conference on Web and Social Media",
+    url: "https://doi.org/10.1609/icwsm.v20i1.42713",
+    type: "journal",
+  },
+  {
+    year: 2026,
+    date: "2026-03-24",
     authors: "Honna, S. & Matsui, A.",
     title: "Disruptive transformation of artworks in master-disciple relationships: the case of Ukiyo-e artworks",
     venue: "EPJ Data Science",
@@ -26,6 +37,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2024,
+    date: "2024-12",
     authors: "Matsui, A. & Ferrara, E.",
     title: "Word embedding for social sciences: an interdisciplinary survey",
     venue: "PeerJ Computer Science",
@@ -34,6 +46,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2024,
+    date: "2024-10-19",
     authors: "Nishikawa, M., Sakai, D. & Matsui, A.",
     title: "The impact of the internationalization of political science on publishing in two languages: the case of Japan, 1971–2023",
     venue: "Scientometrics",
@@ -42,6 +55,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2024,
+    date: "2024-08-01",
     authors: "Salama, S., Matsui, A. & Kamihigashi, T.",
     title: "Extracting Official Agencies’ Communication Patterns During the COVID-19 Pandemic: A Text Mining Approach",
     venue: "Proceedings of the Third International Conference on Innovations in Computing Research (ICR’24)",
@@ -50,6 +64,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2024,
+    date: "2024-06",
     authors: "Matsui, A., Murayama, T. & Yoshida, M.",
     title: "Hater Is Not the Only Source of Toxic Communication Online, But Also Fan",
     venue: "ICWSM 2024 Workshop : The 5th International Workshop on Cyber Social Threats (CySoc 2024)",
@@ -58,6 +73,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2024,
+    date: "2024-05-28",
     authors: "Matsui, A., Miyazaki, K. & Murayama, T.",
     title: "Throw Your Hat in the Ring (of Wikipedia): Exploring Urban-Rural Disparities in Local Politicians' Information Supply",
     venue: "Proceedings of the International AAAI Conference on Web and Social Media (ICWSM)",
@@ -67,6 +83,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2023,
+    date: "2023-06-02",
     authors: "Murayama, T., Matsui, A., Miyazaki, K., et al.",
     title: "The Chance of Winning Election Impacts on Social Media Strategy",
     venue: "Proceedings of the International AAAI Conference on Web and Social Media (ICWSM)",
@@ -75,6 +92,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2023,
+    date: "2023-04-30",
     authors: "Miyazaki, K., Murayama, T., Matsui, A., et al.",
     title: "Political Honeymoon Effect on Social Media: Characterizing Social Media Reaction to the Changes of Prime Minister in Japan",
     venue: "Proceedings of the 15th ACM Web Science Conference 2023",
@@ -83,6 +101,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2023,
+    date: "2023-03-29",
     authors: "Benjamin, D. M., Morstatter, F., Abbas, A. E., et al.",
     title: "Hybrid forecasting of geopolitical events <sup>†</sup>",
     venue: "AI Magazine",
@@ -91,6 +110,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2022,
+    date: "2022-01",
     authors: "Matsui, A. & Moriwaki, D.",
     title: "Online-to-offline advertisements as field experiments",
     venue: "The Japanese Economic Review",
@@ -99,6 +119,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2021,
+    date: "2021-11",
     authors: "Matsui, A., Ren, X. & Ferrara, E.",
     title: "Using Word Embedding to Reveal Monetary Policy Explanation Changes",
     venue: "Proceedings of the Third Workshop on Economics and Natural Language Processing",
@@ -107,6 +128,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2021,
+    date: "2021-09",
     authors: "Matsui, A., Chen, E., Wang, Y. & Ferrara, E.",
     title: "The impact of peer review on the contribution potential of scientific papers",
     venue: "Peerj",
@@ -114,6 +136,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2021,
+    date: "2021",
     authors: "Moriwaki, D., Hayakawa, Y., Matsui, A., et al.",
     title: "A Real-World Implementation of Unbiased Lift-based Bidding System",
     venue: "Proceedings of the IEEE International Conference on Big Data (Big Data)",
@@ -122,6 +145,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2020,
+    date: "2020-08-20",
     authors: "Matsui, A., Kobayashi, T., Moriwaki, D. & Ferrara, E.",
     title: "Detecting multi-timescale consumption patterns from receipt data: a non-negative tensor factorization approach",
     venue: "Journal of Computational Social Science",
@@ -130,6 +154,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2020,
+    date: "2020-01",
     authors: "Matsui, A., Sapienza, A. & Ferrara, E.",
     title: "Does Streaming Esports Affect Players' Behavior and Performance?",
     venue: "Games and Culture",
@@ -138,6 +163,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2019,
+    date: "2019",
     authors: "Morstatter, F., Galstyan, A., Satyukov, G., et al.",
     title: "SAGE: A Hybrid Geopolitical Event Forecasting System",
     venue: "Proceedings of the Twenty-Eighth International Joint Conference on Artificial Intelligence (IJCAI)",
@@ -145,6 +171,7 @@ export const publications: Publication[] = [
   },
   {
     year: 2018,
+    date: "2018",
     authors: "Deb, A., Majmundar, A., Seo, S., et al.",
     title: "Social Bots for Online Public Health Interventions",
     venue: "Proceedings of the IEEE/ACM International Conference on Advances in Social Networks Analysis and Mining (ASONAM)",
@@ -154,6 +181,7 @@ export const publications: Publication[] = [
 
 export type Book = {
   year: number;
+  date?: string;
   title: string;
   role: string;
   publisher: string;
@@ -163,6 +191,7 @@ export type Book = {
 export const books: Book[] = [
   {
     year: 2025,
+    date: "2025-07",
     title: "サイエンス・オブ・サイエンス",
     role: "Author",
     publisher: "森北出版",

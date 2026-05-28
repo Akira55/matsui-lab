@@ -294,6 +294,7 @@ function buildPublications(papers, highlightOverrides) {
     const doi = it.identifiers?.doi?.[0]?.toLowerCase();
     const obj = {
       year: parseYear(it.publication_date),
+      date: it.publication_date || undefined,
       authors: formatAuthors(it.authors),
       title: pickLang(it.paper_title, 'en', 'ja') ?? '',
       venue: pickLang(it.publication_name, 'en', 'ja') ?? '',
@@ -311,6 +312,7 @@ function buildBooks(booksEtc, bookRoleOverrides) {
     const url = (it.see_also ?? []).find((s) => s.label === 'url')?.['@id'];
     return {
       year: parseYear(it.publication_date),
+      date: it.publication_date || undefined,
       title,
       role: bookRoleOverrides.get(normalizeTitle(title)) ?? 'Author',
       publisher: pickLang(it.publisher, 'ja', 'en') ?? '',
@@ -339,6 +341,7 @@ function buildAwards(awards) {
     const subtitle = pickLang(it.award_title, 'ja', 'en');
     return {
       year: parseYear(it.award_date),
+      date: it.award_date || undefined,
       title: subtitle ? `${award} — ${subtitle}` : award,
       org: pickLang(it.association, 'ja', 'en'),
     };
@@ -378,6 +381,7 @@ function buildMisc(misc) {
     const url = (it.see_also ?? []).find((s) => s.label === 'url')?.['@id'];
     return {
       year: parseYear(it.publication_date),
+      date: it.publication_date || undefined,
       type: miscType(it),
       authors: formatAuthors(it.authors),
       title,
@@ -400,6 +404,7 @@ function emitPublicationsFile(pubs, books) {
   return `${HEADER('published_papers, books_etc')}
 export type Publication = {
   year: number;
+  date?: string; // raw researchmap publication_date: YYYY | YYYY-MM | YYYY-MM-DD
   authors: string;
   title: string;
   venue: string;
@@ -412,6 +417,7 @@ export const publications: Publication[] = ${tsArray(pubs, '')};
 
 export type Book = {
   year: number;
+  date?: string;
   title: string;
   role: string;
   publisher: string;
@@ -440,6 +446,7 @@ function emitAwardsFile(awards, grants) {
   return `${HEADER('awards, research_projects')}
 export type Award = {
   year: number;
+  date?: string;
   title: string;
   org?: string;
   url?: string;
@@ -464,6 +471,7 @@ function emitMiscFile(misc) {
   return `${HEADER('misc')}
 export type MiscItem = {
   year: number;
+  date?: string;
   authors: string;
   title: string;
   venue: string;

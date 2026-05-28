@@ -14,6 +14,13 @@ export type Talk = {
 
 export const talks: Talk[] = [
   {
+    date: "2026-05-22",
+    type: "oral",
+    title: "Wikipediaから見える 「言語ごとの知識のかたち」",
+    venue: "文部科学省と国立大学附置研究所・センター 個別定例ランチミーティング 第150回神⼾⼤学計算社会科学研究センター",
+    url: "https://researchmap.jp/amrmap/presentations/53773139",
+  },
+  {
     date: "2025-12-20",
     type: "invited",
     title: "Global Patterns of Knowledge: Language, Genre, and the Geography of Knowledge",

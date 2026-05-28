@@ -6,6 +6,7 @@
 
 export type Award = {
   year: number;
+  date?: string;
   title: string;
   org?: string;
   url?: string;
@@ -14,15 +15,18 @@ export type Award = {
 export const awards: Award[] = [
   {
     year: 2024,
+    date: "2024",
     title: "第3回計算社会科学大会 大会優秀賞 — ネットワーク分析による日本美術作品の定量分析： 浮世絵の創造性の変化",
     org: "計算社会科学会",
   },
   {
     year: 2015,
+    date: "2015",
     title: "公共財団法人みずほ学術振興財団「第 56 回懸賞論文」佳作賞 — 量的・質的金融緩和の「出口戦略」を考える",
   },
   {
     year: 2015,
+    date: "2015",
     title: "白木賞(優秀卒業論文) — 債券の削減バランスを考慮した「質的・量的金融緩和」の出口戦略シミュレーション",
     org: "神戸大学",
   },

@@ -21,7 +21,7 @@ export type FeedTag =
   | 'lab';
 
 export type FeedItem = {
-  date: string; // YYYY-MM-DD (year-only sources get YYYY-12-31 so they sort to year end)
+  date: string; // display: YYYY | YYYY-MM | YYYY-MM-DD (whatever the source gave us)
   title: string;
   meta?: string; // authors / venue / role
   body?: string; // narrative body, locale-aware (manual news only)
@@ -29,8 +29,17 @@ export type FeedItem = {
   url?: string;
 };
 
-// Year-only sources use Dec 31 so they appear near the end of their year, after dated items.
-const yearEnd = (y: number) => `${y}-12-31`;
+// Pad a partial date (YYYY or YYYY-MM) to YYYY-MM-DD so we can sort everything together.
+// We pad with end-of-period so a year-only entry sorts after dated entries within the same year.
+function sortKey(date: string): string {
+  const parts = date.split('-');
+  if (parts.length >= 3) return date.slice(0, 10);
+  if (parts.length === 2) return `${date}-31`;
+  return `${date}-12-31`;
+}
+
+// Choose the best display date: prefer the source's raw date, fall back to YYYY.
+const pubDate = (p: { date?: string; year: number }) => p.date ?? String(p.year);
 
 export function getFeed(locale: Locale): FeedItem[] {
   const items: FeedItem[] = [];
@@ -47,7 +56,7 @@ export function getFeed(locale: Locale): FeedItem[] {
 
   for (const p of publications) {
     items.push({
-      date: yearEnd(p.year),
+      date: pubDate(p),
       title: p.title,
       meta: `${p.authors} · ${p.venue}`,
       tag: 'paper',
@@ -67,7 +76,7 @@ export function getFeed(locale: Locale): FeedItem[] {
 
   for (const m of misc) {
     items.push({
-      date: yearEnd(m.year),
+      date: pubDate(m),
       title: m.title,
       meta: `${m.authors} · ${m.venue}`,
       tag: 'misc',
@@ -77,7 +86,7 @@ export function getFeed(locale: Locale): FeedItem[] {
 
   for (const a of awards) {
     items.push({
-      date: yearEnd(a.year),
+      date: pubDate(a),
       title: a.title,
       meta: a.org,
       tag: 'award',
@@ -98,7 +107,7 @@ export function getFeed(locale: Locale): FeedItem[] {
 
   for (const b of books) {
     items.push({
-      date: yearEnd(b.year),
+      date: pubDate(b),
       title: b.title,
       meta: `${b.role} · ${b.publisher}`,
       tag: 'book',
@@ -106,5 +115,5 @@ export function getFeed(locale: Locale): FeedItem[] {
     });
   }
 
-  return items.sort((a, b) => (a.date < b.date ? 1 : -1));
+  return items.sort((a, b) => (sortKey(a.date) < sortKey(b.date) ? 1 : -1));
 }
