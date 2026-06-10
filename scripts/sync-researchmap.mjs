@@ -134,6 +134,25 @@ function formatPeriod(it) {
   return `${from} – ${to}`;
 }
 
+// Researchmap academic_contribution role codes → short JA labels.
+const contributionRoleLabels = {
+  planning_etc: '企画・運営',
+  panel_chair_etc: '司会・パネリスト',
+  review_etc: '査読',
+  lecturer_etc: '講師',
+  secretariat_etc: '事務局',
+  judge_etc: '審査員',
+  moderator_etc: 'モデレーター',
+  presenter_etc: '発表・講演',
+  others_etc: 'その他',
+};
+
+function formatContributionRoles(roles) {
+  return (roles ?? [])
+    .map((r) => contributionRoleLabels[r] ?? r.replace(/_etc$/, '').replace(/_/g, ' '))
+    .join(' · ');
+}
+
 function buildPaperUrl(it) {
   const doi = it.identifiers?.doi?.[0];
   if (doi) return `https://doi.org/${doi}`;
@@ -374,6 +393,18 @@ function buildGrants(projects, overrides) {
   });
 }
 
+function buildService(items) {
+  return items.map((it) => ({
+    year: parseYear(it.from_event_date),
+    date: it.from_event_date || undefined,
+    endDate: it.to_event_date || undefined,
+    title: pickLang(it.academic_contribution_title, 'ja', 'en') ?? '',
+    roles: formatContributionRoles(it.academic_contribution_roles),
+    promoter: pickLang(it.promoter, 'ja', 'en'),
+    url: `https://researchmap.jp/${PERMALINK}/academic_contribution/${it['rm:id']}`,
+  }));
+}
+
 function buildMisc(misc) {
   return misc.map((it) => {
     const title = pickLang(it.paper_title, 'ja', 'en') ?? '';
@@ -467,6 +498,22 @@ export const grants: Grant[] = ${tsArray(grants, '')};
 `;
 }
 
+function emitServiceFile(service) {
+  return `${HEADER('academic_contribution')}
+export type Service = {
+  year: number;
+  date?: string; // from_event_date: YYYY | YYYY-MM | YYYY-MM-DD
+  endDate?: string; // to_event_date, when the activity spans a period
+  title: string;
+  roles: string;
+  promoter?: string;
+  url?: string;
+};
+
+export const service: Service[] = ${tsArray(service, '')};
+`;
+}
+
 function emitMiscFile(misc) {
   return `${HEADER('misc')}
 export type MiscItem = {
@@ -487,17 +534,19 @@ export const misc: MiscItem[] = ${tsArray(misc, '')};
 
 async function main() {
   console.log('Fetching researchmap data…');
-  const [papers, presentations, awards, projects, books_etc, misc] = await Promise.all([
+  const [papers, presentations, awards, projects, books_etc, misc, contributions] = await Promise.all([
     fetchAll('published_papers'),
     fetchAll('presentations'),
     fetchAll('awards'),
     fetchAll('research_projects'),
     fetchAll('books_etc'),
     fetchAll('misc'),
+    fetchAll('academic_contribution'),
   ]);
   console.log(
     `  papers=${papers.length}  presentations=${presentations.length}  awards=${awards.length}  ` +
-    `projects=${projects.length}  books=${books_etc.length}  misc=${misc.length}`,
+    `projects=${projects.length}  books=${books_etc.length}  misc=${misc.length}  ` +
+    `service=${contributions.length}`,
   );
 
   const overrides = await extractOverrides();
@@ -513,12 +562,14 @@ async function main() {
   const awardsOut = buildAwards(awards);
   const grants = buildGrants(projects, overrides);
   const miscOut = buildMisc(misc);
+  const serviceOut = buildService(contributions);
 
   const writes = [
     [path.join(DATA_DIR, 'publications.ts'), emitPublicationsFile(pubs, books)],
     [path.join(DATA_DIR, 'talks.ts'), emitTalksFile(talks)],
     [path.join(DATA_DIR, 'awards.ts'), emitAwardsFile(awardsOut, grants)],
     [path.join(DATA_DIR, 'misc.ts'), emitMiscFile(miscOut)],
+    [path.join(DATA_DIR, 'service.ts'), emitServiceFile(serviceOut)],
   ];
 
   for (const [file, content] of writes) {
