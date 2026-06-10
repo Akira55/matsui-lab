@@ -17,7 +17,7 @@ export type Service = {
 export const service: Service[] = [
   {
     year: 2026,
-    date: "2026-06-09",
+    date: "2026-06-08",
     title: "人工知能学会全国大会（第40回） 若手交流ランチ会",
     roles: "企画・運営 · 司会・パネリスト",
     promoter: "松井暉",
