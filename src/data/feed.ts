@@ -9,6 +9,7 @@ import { publications, books } from './publications';
 import { talks } from './talks';
 import { misc } from './misc';
 import { awards, grants } from './awards';
+import { service } from './service';
 
 export type FeedTag =
   | 'paper'
@@ -17,6 +18,7 @@ export type FeedTag =
   | 'award'
   | 'grant'
   | 'book'
+  | 'service'
   | 'media'
   | 'lab';
 
@@ -112,6 +114,16 @@ export function getFeed(locale: Locale): FeedItem[] {
       meta: `${b.role} · ${b.publisher}`,
       tag: 'book',
       url: b.url,
+    });
+  }
+
+  for (const s of service) {
+    items.push({
+      date: pubDate(s),
+      title: s.title,
+      meta: [s.roles, s.promoter].filter(Boolean).join(' · ') || undefined,
+      tag: 'service',
+      url: s.url,
     });
   }
 
