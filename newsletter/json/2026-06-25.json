@@ -1,7 +1,7 @@
 {
   "generated_at": "2026-06-25",
-  "base_date": "2026-03-25",
-  "end_date": "2026-04-24",
+  "base_date": "2026-06-25",
+  "end_date": "2026-06-25",
   "base_date_source": "cycle_anchor_day",
   "cycle_anchor_day": 25,
   "source": "data/activities.yml",
@@ -15,6 +15,6 @@
     "社会活動": [],
     "メディア掲載": []
   },
-  "raw_text_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/txt/latest.txt",
-  "raw_json_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/json/latest.json"
+  "raw_text_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/txt/2026-06-25.txt",
+  "raw_json_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/json/2026-06-25.json"
 }

@@ -5,10 +5,8 @@
 正本 ``data/activities.yml`` を読み込み、基準日(base_date)から終了日(end_date)
 までに該当する活動を抽出して、以下のファイルを UTF-8 で出力する。
 
-    newsletter/txt/latest.txt
-    newsletter/json/latest.json
-    newsletter/txt/history/<end_date>.txt
-    newsletter/json/history/<end_date>.json
+    newsletter/txt/<end_date>.txt
+    newsletter/json/<end_date>.json
 
 基準日は次の優先順位で決定する:
     1. --base-date 引数
@@ -49,11 +47,9 @@ ROOT = Path(__file__).resolve().parent.parent
 ACTIVITIES_PATH = ROOT / "data" / "activities.yml"
 CONFIG_PATH = ROOT / "config" / "newsletter.yml"
 OUTPUT_DIR = ROOT / "newsletter"
-# 形式ごとにサブディレクトリを分ける。
+# 形式ごとにサブディレクトリを分け、その直下に日付ファイルをフラットに並べる。
 TXT_DIR = OUTPUT_DIR / "txt"
 JSON_DIR = OUTPUT_DIR / "json"
-TXT_HISTORY_DIR = TXT_DIR / "history"
-JSON_HISTORY_DIR = JSON_DIR / "history"
 
 # data/activities.yml 内のソースパス表記(JSON の "source" に入れる)
 SOURCE_LABEL = "data/activities.yml"
@@ -349,6 +345,12 @@ def main() -> None:
     unknown_label = config.get("unknown_category_label", DEFAULT_UNKNOWN_LABEL)
     categories = build_categories(selected, category_order, unknown_label)
 
+    # raw URL はこの実行の日付ファイル自身を指す(latest という固定名は持たない)。
+    fname = end_date.isoformat()
+    raw_base = (config.get("raw_base_url") or "").rstrip("/")
+    raw_text_url = "{}/txt/{}.txt".format(raw_base, fname) if raw_base else ""
+    raw_json_url = "{}/json/{}.json".format(raw_base, fname) if raw_base else ""
+
     payload = {
         "generated_at": today.isoformat(),
         "base_date": base_date.isoformat(),
@@ -358,17 +360,15 @@ def main() -> None:
         "source": SOURCE_LABEL,
         "count": len(selected),
         "categories": categories,
-        "raw_text_url": config.get("raw_text_url", ""),
-        "raw_json_url": config.get("raw_json_url", ""),
+        "raw_text_url": raw_text_url,
+        "raw_json_url": raw_json_url,
     }
 
     text = render_text(payload, base_source, anchor_day)
 
-    # 出力(latest と当日スナップショット。txt/json をサブディレクトリで分ける)
-    write_text(TXT_DIR / "latest.txt", text)
-    write_json(JSON_DIR / "latest.json", payload)
-    write_text(TXT_HISTORY_DIR / "{}.txt".format(end_date.isoformat()), text)
-    write_json(JSON_HISTORY_DIR / "{}.json".format(end_date.isoformat()), payload)
+    # 出力(end_date の日付ファイルを txt/ と json/ 直下に書き出す)
+    write_text(TXT_DIR / "{}.txt".format(fname), text)
+    write_json(JSON_DIR / "{}.json".format(fname), payload)
 
     print(
         "Generated newsletter diff: {} 件 "
