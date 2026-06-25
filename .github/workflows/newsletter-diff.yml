@@ -1,0 +1,67 @@
+name: Update newsletter diff
+
+on:
+  schedule:
+    # 20:00 UTC = 05:00 JST. Cron times are best-effort; GitHub may delay during high load.
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+    inputs:
+      base_date:
+        description: '対象期間の開始日 (YYYY-MM-DD)。指定すると cycle_anchor_day より優先。'
+        required: false
+        type: string
+      end_date:
+        description: '対象期間の終了日 (YYYY-MM-DD)。未指定なら JST 本日。'
+        required: false
+        type: string
+      cycle_anchor_day:
+        description: '月次サイクルの基準日 (1-31)。base_date 未指定時のみ使用。'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: newsletter-diff
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate newsletter diff
+        # 入力はシェルインジェクションを避けるため env 経由で渡す。
+        env:
+          IN_BASE_DATE: ${{ inputs.base_date }}
+          IN_END_DATE: ${{ inputs.end_date }}
+          IN_ANCHOR: ${{ inputs.cycle_anchor_day }}
+        run: |
+          ARGS=()
+          [ -n "$IN_BASE_DATE" ] && ARGS+=(--base-date "$IN_BASE_DATE")
+          [ -n "$IN_END_DATE" ]  && ARGS+=(--end-date "$IN_END_DATE")
+          [ -n "$IN_ANCHOR" ]    && ARGS+=(--cycle-anchor-day "$IN_ANCHOR")
+          python scripts/update_newsletter_diff.py "${ARGS[@]}"
+
+      - name: Commit and push if changed
+        run: |
+          if [ -z "$(git status --porcelain newsletter)" ]; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add newsletter
+          git commit -m "Update newsletter diff for $(TZ=Asia/Tokyo date +%Y-%m-%d)"
+          # Rebase once in case of a concurrent push, then push.
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"

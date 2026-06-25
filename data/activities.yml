@@ -1,0 +1,61 @@
+# 松井暉 研究活動の記録(差分生成の唯一の入力)
+# =====================================================================
+# 新しい活動を追加するには、activities: の下に "- title:" から始まる項目を
+# 追記するだけです(順番は問いません。スクリプトが日付で並べ替えます)。
+#
+# 各項目のフィールド:
+#   title    (必須) 活動名・発表タイトルなど
+#   category (必須) 下記の候補から選ぶ
+#   date     (必須) "YYYY-MM-DD" 形式。必ずダブルクオートで囲む
+#   venue    (任意) 学会名・会議名・掲載媒体など
+#   location (任意) 開催地。テキストでは「於：」として表示
+#   details  (任意) 補足(口頭発表 / ポスター発表 など)
+#   role     (任意) 自身の役割(セッションチェア / 企画立案 など)
+#   url      (任意) 関連 URL
+#
+# category の候補(config/newsletter.yml の category_order と対応):
+#   - 論文掲載
+#   - 国際会議発表
+#   - 国内研究発表
+#   - 招待講演
+#   - 学術貢献活動
+#   - 社会活動
+#   - メディア掲載
+# 上記以外を書いた場合は、出力時に末尾の「その他」へまとめられます。
+# =====================================================================
+
+activities:
+  - title: "Disruptive transformation of artworks in master-disciple relationships: the case of Ukiyo-e artworks"
+    category: "論文掲載"
+    date: "2026-03-24"
+    venue: "EPJ Data Science"
+    details: "Honna, S. & Matsui, A."
+    url: "https://doi.org/10.1140/epjds/s13688-026-00646-1"
+
+  - title: "Wikipediaから見える「言語ごとの知識のかたち」"
+    category: "国内研究発表"
+    date: "2026-05-22"
+    venue: "文部科学省と国立大学附置研究所・センター 個別定例ランチミーティング"
+    details: "第150回 神戸大学計算社会科学研究センター"
+    url: "https://researchmap.jp/amrmap/presentations/53773139"
+
+  - title: "Cross-Platform and Cross-Lingual Dynamics of Wikipedia Sharing and Contribution"
+    category: "論文掲載"
+    date: "2026-05-25"
+    venue: "Proceedings of the International AAAI Conference on Web and Social Media"
+    details: "Matsui, A."
+    url: "https://doi.org/10.1609/icwsm.v20i1.42713"
+
+  - title: "人工知能学会全国大会(第40回) 若手交流ランチ会"
+    category: "学術貢献活動"
+    date: "2026-06-08"
+    venue: "2026年度 人工知能学会全国大会(第40回)"
+    role: "企画・運営、司会・パネリスト"
+    url: "https://researchmap.jp/amrmap/academic_contribution/53891868"
+
+  - title: "人工知能学会全国大会(第40回) 若手交流会：失敗談から学ぶ研究プロセス"
+    category: "学術貢献活動"
+    date: "2026-06-08"
+    venue: "2026年度 人工知能学会全国大会(第40回)"
+    role: "企画・運営、司会・パネリスト"
+    url: "https://researchmap.jp/amrmap/academic_contribution/53891864"
