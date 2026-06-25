@@ -5,10 +5,10 @@
 正本 ``data/activities.yml`` を読み込み、基準日(base_date)から終了日(end_date)
 までに該当する活動を抽出して、以下のファイルを UTF-8 で出力する。
 
-    newsletter/latest.txt
-    newsletter/latest.json
-    newsletter/history/<end_date>.txt
-    newsletter/history/<end_date>.json
+    newsletter/txt/latest.txt
+    newsletter/json/latest.json
+    newsletter/txt/history/<end_date>.txt
+    newsletter/json/history/<end_date>.json
 
 基準日は次の優先順位で決定する:
     1. --base-date 引数
@@ -49,7 +49,11 @@ ROOT = Path(__file__).resolve().parent.parent
 ACTIVITIES_PATH = ROOT / "data" / "activities.yml"
 CONFIG_PATH = ROOT / "config" / "newsletter.yml"
 OUTPUT_DIR = ROOT / "newsletter"
-HISTORY_DIR = OUTPUT_DIR / "history"
+# 形式ごとにサブディレクトリを分ける。
+TXT_DIR = OUTPUT_DIR / "txt"
+JSON_DIR = OUTPUT_DIR / "json"
+TXT_HISTORY_DIR = TXT_DIR / "history"
+JSON_HISTORY_DIR = JSON_DIR / "history"
 
 # data/activities.yml 内のソースパス表記(JSON の "source" に入れる)
 SOURCE_LABEL = "data/activities.yml"
@@ -360,11 +364,11 @@ def main() -> None:
 
     text = render_text(payload, base_source, anchor_day)
 
-    # 出力(latest と当日スナップショット)
-    write_text(OUTPUT_DIR / "latest.txt", text)
-    write_json(OUTPUT_DIR / "latest.json", payload)
-    write_text(HISTORY_DIR / "{}.txt".format(end_date.isoformat()), text)
-    write_json(HISTORY_DIR / "{}.json".format(end_date.isoformat()), payload)
+    # 出力(latest と当日スナップショット。txt/json をサブディレクトリで分ける)
+    write_text(TXT_DIR / "latest.txt", text)
+    write_json(JSON_DIR / "latest.json", payload)
+    write_text(TXT_HISTORY_DIR / "{}.txt".format(end_date.isoformat()), text)
+    write_json(JSON_HISTORY_DIR / "{}.json".format(end_date.isoformat()), payload)
 
     print(
         "Generated newsletter diff: {} 件 "

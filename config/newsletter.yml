@@ -21,8 +21,8 @@ cycle_anchor_day: 25
 timezone: "Asia/Tokyo"
 
 # 事務(共同研究推進室)に共有する raw URL。JSON 内にそのまま埋め込まれます。
-raw_text_url: "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/latest.txt"
-raw_json_url: "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/latest.json"
+raw_text_url: "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/txt/latest.txt"
+raw_json_url: "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/json/latest.json"
 
 # カテゴリの表示順。ここに無いカテゴリは末尾に unknown_category_label でまとめます。
 category_order:
