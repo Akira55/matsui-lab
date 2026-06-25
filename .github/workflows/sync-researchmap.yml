@@ -24,21 +24,33 @@ jobs:
         with:
           node-version: 20
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Sync data from researchmap
         run: node scripts/sync-researchmap.mjs
+
+      - name: Build activities list for the newsletter
+        run: node scripts/build-activities.mjs
+
+      - name: Build monthly newsletter files
+        run: |
+          pip install -r requirements.txt
+          python scripts/build_newsletter.py
 
       - name: Commit and push if changed
         id: commit
         run: |
-          if [ -z "$(git status --porcelain src/data)" ]; then
+          if [ -z "$(git status --porcelain src/data data newsletter)" ]; then
             echo "No changes."
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name  'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/data
-          git commit -m "chore: sync data from researchmap ($(date -u +%Y-%m-%d))"
+          git add src/data data newsletter
+          git commit -m "chore: sync researchmap + newsletter ($(date -u +%Y-%m-%d))"
           # Rebase once in case of a concurrent push, then push.
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
           git push origin "HEAD:${GITHUB_REF_NAME}"

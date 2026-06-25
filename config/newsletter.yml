@@ -1,27 +1,16 @@
-# 研究活動 差分生成の設定
+# 研究活動 月次ニュースレターの設定
 #
-# base_date を指定すると、常にその日付から end_date までを対象にします。
-# 通常運用では base_date は空(null)にし、cycle_anchor_day で月次サイクルを管理します。
-#
-# 基準日(対象期間の開始日)の決定優先順位:
-#   1. コマンドライン引数 --base-date
-#   2. この設定ファイルの base_date
-#   3. コマンドライン引数 --cycle-anchor-day から計算
-#   4. この設定ファイルの cycle_anchor_day から計算
+# データは researchmap 同期 → scripts/build-activities.mjs が生成する
+# data/activities.yml が正本。手動補足は data/activities.manual.yml。
+# scripts/build_newsletter.py が月ごとのファイルを出力します。
 
-# 固定の基準日。通常は null。例: "2026-04-01"
-base_date: null
+# 生成を開始する月 (YYYY-MM)。これより前の月のファイルは作りません。
+# 例: "2026-04" にすると 2026年4月号から生成します。
+start_month: "2026-04"
 
-# 月次サイクルの基準日(1-31)。end_date 以前で最も近いこの日を基準日とします。
-# 例: 25 のとき、end_date が 6/25 なら基準日は 6/25、6/24 なら基準日は 5/25。
-# 月にその日が無い場合(31 と 2月 など)は、その月の末日に丸めます。
-cycle_anchor_day: 25
-
-# 日付計算に使うタイムゾーン。
-timezone: "Asia/Tokyo"
-
-# raw 配信のベース URL。各 JSON にはこの下の "txt/<日付>.txt" と
-# "json/<日付>.json" を指す raw_text_url / raw_json_url が埋め込まれます。
+# raw 配信のベース URL。各月ファイルへの URL がこの下に作られます。
+#   <raw_base_url>/txt/<YYYY-MM>.txt
+#   <raw_base_url>/json/<YYYY-MM>.json
 raw_base_url: "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter"
 
 # カテゴリの表示順。ここに無いカテゴリは末尾に unknown_category_label でまとめます。
