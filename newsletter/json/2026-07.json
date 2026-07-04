@@ -1,0 +1,24 @@
+{
+  "month": "2026-07",
+  "source": "researchmap (data/activities.yml) + data/activities.manual.yml",
+  "count": 1,
+  "categories": {
+    "論文掲載": [],
+    "国際会議発表": [],
+    "国内研究発表": [],
+    "招待講演": [],
+    "学術貢献活動": [
+      {
+        "title": "第4回Science of Science 研究会",
+        "category": "学術貢献活動",
+        "date": "2026-07-04",
+        "role": "企画・運営 · 司会・パネリスト",
+        "url": "https://researchmap.jp/amrmap/academic_contribution/54325250"
+      }
+    ],
+    "社会活動": [],
+    "メディア掲載": []
+  },
+  "raw_text_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/txt/2026-07.txt",
+  "raw_json_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/json/2026-07.json"
+}

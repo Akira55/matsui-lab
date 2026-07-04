@@ -3,6 +3,12 @@
   "start_month": "2026-04",
   "months": [
     {
+      "month": "2026-07",
+      "count": 1,
+      "txt_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/txt/2026-07.txt",
+      "json_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/json/2026-07.json"
+    },
+    {
       "month": "2026-06",
       "count": 2,
       "txt_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/txt/2026-06.txt",

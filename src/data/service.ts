@@ -17,6 +17,15 @@ export type Service = {
 export const service: Service[] = [
   {
     year: 2026,
+    date: "2026-07-04",
+    endDate: "2026-07-05",
+    title: "第4回Science of Science 研究会",
+    roles: "企画・運営 · 司会・パネリスト",
+    promoter: "松井暉",
+    url: "https://researchmap.jp/amrmap/academic_contribution/54325250",
+  },
+  {
+    year: 2026,
     date: "2026-06-08",
     title: "人工知能学会全国大会（第40回） 若手交流ランチ会",
     roles: "企画・運営 · 司会・パネリスト",
