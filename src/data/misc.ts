@@ -130,10 +130,10 @@ export const misc: MiscItem[] = [
   },
   {
     year: 2025,
-    date: "2025-03-15",
+    date: "2025-04-21",
     type: "preprint",
-    authors: "Murayama, T., Lim, D., Matsui, A. & Tanihara, T.",
-    title: "The \"recognition,\" \"belief,\" and \"action\" regarding conspiracy theories: An empirical study using large-scale samples from Japan and the United States",
+    authors: "Tanihara, T., Murayama, T., Lim, D. & Matsui, A.",
+    title: "The \"recognition\", \"belief\", and \"action\" regarding conspiracy theories: An empirical study using large-scale samples from the United States and Japan",
     venue: "arXiv",
     url: "http://arxiv.org/abs/2503.12166v1",
   },
