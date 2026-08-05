@@ -4,6 +4,16 @@
 # (このファイルは同期のたびに上書きされます)。
 
 activities:
+  - title: "パネルディスカッション「「A」へのスタンス」"
+    category: "招待講演"
+    date: "2026-08-05"
+    venue: "PLIJサマーキャンプ2026「STEAMの「A」を考える」"
+    url: "https://researchmap.jp/amrmap/presentations/54562932"
+  - title: "計算とデータが拓く、計算社会科学研究：神戸大学CCSSの挑戦"
+    category: "招待講演"
+    date: "2026-08-04"
+    venue: "PLIJサマーキャンプ2026「STEAMの「A」を考える」"
+    url: "https://researchmap.jp/amrmap/presentations/54568709"
   - title: "第4回Science of Science 研究会"
     category: "学術貢献活動"
     date: "2026-07-04"

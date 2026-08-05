@@ -14,6 +14,20 @@ export type Talk = {
 
 export const talks: Talk[] = [
   {
+    date: "2026-08-04",
+    type: "invited",
+    title: "計算とデータが拓く、計算社会科学研究：神戸大学CCSSの挑戦",
+    venue: "PLIJサマーキャンプ2026「STEAMの「A」を考える」",
+    url: "https://researchmap.jp/amrmap/presentations/54568709",
+  },
+  {
+    date: "2026-08-05",
+    type: "invited",
+    title: "パネルディスカッション「「A」へのスタンス」",
+    venue: "PLIJサマーキャンプ2026「STEAMの「A」を考える」",
+    url: "https://researchmap.jp/amrmap/presentations/54562932",
+  },
+  {
     date: "2026-05-22",
     type: "oral",
     title: "Wikipediaから見える 「言語ごとの知識のかたち」",

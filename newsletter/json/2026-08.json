@@ -1,0 +1,31 @@
+{
+  "month": "2026-08",
+  "source": "researchmap (data/activities.yml) + data/activities.manual.yml",
+  "count": 2,
+  "categories": {
+    "論文掲載": [],
+    "国際会議発表": [],
+    "国内研究発表": [],
+    "招待講演": [
+      {
+        "title": "計算とデータが拓く、計算社会科学研究：神戸大学CCSSの挑戦",
+        "category": "招待講演",
+        "date": "2026-08-04",
+        "venue": "PLIJサマーキャンプ2026「STEAMの「A」を考える」",
+        "url": "https://researchmap.jp/amrmap/presentations/54568709"
+      },
+      {
+        "title": "パネルディスカッション「「A」へのスタンス」",
+        "category": "招待講演",
+        "date": "2026-08-05",
+        "venue": "PLIJサマーキャンプ2026「STEAMの「A」を考える」",
+        "url": "https://researchmap.jp/amrmap/presentations/54562932"
+      }
+    ],
+    "学術貢献活動": [],
+    "社会活動": [],
+    "メディア掲載": []
+  },
+  "raw_text_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/txt/2026-08.txt",
+  "raw_json_url": "https://raw.githubusercontent.com/Akira55/matsui-lab/main/newsletter/json/2026-08.json"
+}
