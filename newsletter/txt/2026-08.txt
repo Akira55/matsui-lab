@@ -1,7 +1,10 @@
 松井暉 研究活動 2026年8月
 ========================================
 
-該当件数 : 2
+該当件数 : 3
+
+【論文掲載】
+  ・「Modeling user redemption behavior in complex digital incentive environment: an empirical study using large-scale transactional data」 EPJ Data Science（2026年8月10日）／Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.
 
 【招待講演】
   ・「計算とデータが拓く、計算社会科学研究：神戸大学CCSSの挑戦」 PLIJサマーキャンプ2026「STEAMの「A」を考える」（2026年8月4日）

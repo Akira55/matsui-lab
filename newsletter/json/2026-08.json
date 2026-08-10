@@ -1,9 +1,18 @@
 {
   "month": "2026-08",
   "source": "researchmap (data/activities.yml) + data/activities.manual.yml",
-  "count": 2,
+  "count": 3,
   "categories": {
-    "論文掲載": [],
+    "論文掲載": [
+      {
+        "title": "Modeling user redemption behavior in complex digital incentive environment: an empirical study using large-scale transactional data",
+        "category": "論文掲載",
+        "date": "2026-08-10",
+        "venue": "EPJ Data Science",
+        "details": "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.",
+        "url": "https://doi.org/10.1140/epjds/s13688-026-00687-6"
+      }
+    ],
     "国際会議発表": [],
     "国内研究発表": [],
     "招待講演": [

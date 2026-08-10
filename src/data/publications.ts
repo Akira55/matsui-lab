@@ -18,6 +18,15 @@ export type Publication = {
 export const publications: Publication[] = [
   {
     year: 2026,
+    date: "2026-08-10",
+    authors: "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.",
+    title: "Modeling user redemption behavior in complex digital incentive environment: an empirical study using large-scale transactional data",
+    venue: "EPJ Data Science",
+    url: "https://doi.org/10.1140/epjds/s13688-026-00687-6",
+    type: "journal",
+  },
+  {
+    year: 2026,
     date: "2026-05-25",
     authors: "Matsui, A.",
     title: "Cross-Platform and Cross-Lingual Dynamics of Wikipedia Sharing and Contribution",

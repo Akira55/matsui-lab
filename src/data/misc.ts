@@ -17,6 +17,15 @@ export type MiscItem = {
 export const misc: MiscItem[] = [
   {
     year: 2026,
+    date: "2026-08-10",
+    type: "working-paper",
+    authors: "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.",
+    title: "Modeling user redemption behavior in complex digital incentive environment: an empirical study using large-scale transactional data",
+    venue: "",
+    url: "https://link.springer.com/article/10.1140/epjds/s13688-026-00687-6",
+  },
+  {
+    year: 2026,
     date: "2026-07",
     type: "working-paper",
     authors: "",
@@ -70,14 +79,6 @@ export const misc: MiscItem[] = [
     authors: "小林照義 & 松井暉",
     title: "連載『「つながり」から経済を読み解くネットワーク科学』vol.4 一般化ランダム・ネットワーク",
     venue: "経済セミナー",
-  },
-  {
-    year: 2025,
-    date: "2025-09",
-    type: "working-paper",
-    authors: "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.",
-    title: "Modeling User Redemption Behavior in Complex Incentive Digital Environment: An Empirical Study Using Large-Scale Transactional Data",
-    venue: "",
   },
   {
     year: 2025,

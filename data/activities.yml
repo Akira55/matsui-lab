@@ -4,6 +4,12 @@
 # (このファイルは同期のたびに上書きされます)。
 
 activities:
+  - title: "Modeling user redemption behavior in complex digital incentive environment: an empirical study using large-scale transactional data"
+    category: "論文掲載"
+    date: "2026-08-10"
+    venue: "EPJ Data Science"
+    details: "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H."
+    url: "https://doi.org/10.1140/epjds/s13688-026-00687-6"
   - title: "パネルディスカッション「「A」へのスタンス」"
     category: "招待講演"
     date: "2026-08-05"
