@@ -17,15 +17,6 @@ export type MiscItem = {
 export const misc: MiscItem[] = [
   {
     year: 2026,
-    date: "2026-08-10",
-    type: "working-paper",
-    authors: "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.",
-    title: "Modeling user redemption behavior in complex digital incentive environment: an empirical study using large-scale transactional data",
-    venue: "",
-    url: "https://link.springer.com/article/10.1140/epjds/s13688-026-00687-6",
-  },
-  {
-    year: 2026,
     date: "2026-07",
     type: "working-paper",
     authors: "",
