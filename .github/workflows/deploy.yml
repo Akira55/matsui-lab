@@ -38,7 +38,16 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
     steps:
+      # actions/deploy-pages does not retry the deployment-creation API call, so a
+      # transient network failure there leaves the site on the previous build with a
+      # green sync workflow (2026-08-11: "HttpError: self-signed certificate").
+      # Try once, then retry before letting the run fail.
       - id: deployment
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v4
