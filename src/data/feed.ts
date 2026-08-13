@@ -43,6 +43,11 @@ function sortKey(date: string): string {
 // Choose the best display date: prefer the source's raw date, fall back to YYYY.
 const pubDate = (p: { date?: string; year: number }) => p.date ?? String(p.year);
 
+// Join meta parts with the separator, dropping the ones researchmap left empty.
+// A misc entry with no venue used to render as "Authors ·" with a dangling separator.
+const joinMeta = (...parts: (string | undefined)[]) =>
+  parts.filter(Boolean).join(' · ') || undefined;
+
 export function getFeed(locale: Locale): FeedItem[] {
   const items: FeedItem[] = [];
 
@@ -60,7 +65,7 @@ export function getFeed(locale: Locale): FeedItem[] {
     items.push({
       date: pubDate(p),
       title: p.title,
-      meta: `${p.authors} · ${p.venue}`,
+      meta: joinMeta(p.authors, p.venue),
       tag: 'paper',
       url: p.url,
     });
@@ -70,7 +75,7 @@ export function getFeed(locale: Locale): FeedItem[] {
     items.push({
       date: t.date,
       title: t.title,
-      meta: t.venue,
+      meta: joinMeta(t.venue),
       tag: 'talk',
       url: t.url,
     });
@@ -80,7 +85,7 @@ export function getFeed(locale: Locale): FeedItem[] {
     items.push({
       date: pubDate(m),
       title: m.title,
-      meta: `${m.authors} · ${m.venue}`,
+      meta: joinMeta(m.authors, m.venue),
       tag: 'misc',
       url: m.url,
     });
@@ -90,7 +95,7 @@ export function getFeed(locale: Locale): FeedItem[] {
     items.push({
       date: pubDate(a),
       title: a.title,
-      meta: a.org,
+      meta: joinMeta(a.org),
       tag: 'award',
       url: a.url,
     });
@@ -101,7 +106,7 @@ export function getFeed(locale: Locale): FeedItem[] {
     items.push({
       date: `${startYear}-04-01`,
       title: g.title,
-      meta: `${g.role} · ${g.funder} · ${g.period}`,
+      meta: joinMeta(g.role, g.funder, g.period),
       tag: 'grant',
       url: g.url,
     });
@@ -111,7 +116,7 @@ export function getFeed(locale: Locale): FeedItem[] {
     items.push({
       date: pubDate(b),
       title: b.title,
-      meta: `${b.role} · ${b.publisher}`,
+      meta: joinMeta(b.role, b.publisher),
       tag: 'book',
       url: b.url,
     });
@@ -121,7 +126,7 @@ export function getFeed(locale: Locale): FeedItem[] {
     items.push({
       date: pubDate(s),
       title: s.title,
-      meta: [s.roles, s.promoter].filter(Boolean).join(' · ') || undefined,
+      meta: joinMeta(s.roles, s.promoter),
       tag: 'service',
       url: s.url,
     });

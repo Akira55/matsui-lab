@@ -59,7 +59,7 @@ const typeChip: Record<string, { label: Record<Locale, string>; bg: string }> = 
                   t.title
                 )}
               </p>
-              <p class="mt-1 text-sm italic text-pop-ink/70">{t.venue}</p>
+              {t.venue && <p class="mt-1 text-sm italic text-pop-ink/70">{t.venue}</p>}
             </li>
           );
         })}

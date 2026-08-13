@@ -44,7 +44,7 @@ const typeChip: Record<string, string> = {
                   <Sparkle class="h-3 w-3" /> highlight
                 </span>
               )}
-              <span class="text-xs text-pop-ink/60">{p.authors}</span>
+              {p.authors && <span class="text-xs text-pop-ink/60">{p.authors}</span>}
             </div>
             <p class="mt-2 font-display text-base leading-snug text-pop-ink">
               {p.url ? (
@@ -61,7 +61,7 @@ const typeChip: Record<string, string> = {
                 p.title
               )}
             </p>
-            <p class="mt-1 text-sm italic text-pop-ink/70">{p.venue}</p>
+            {p.venue && <p class="mt-1 text-sm italic text-pop-ink/70">{p.venue}</p>}
           </li>
         ))}
       </ol>

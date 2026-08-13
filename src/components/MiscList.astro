@@ -37,7 +37,7 @@ const typeChip: Record<string, { label: Record<Locale, string>; bg: string }> = 
             <li class="sticker-sm p-4 transition-transform hover:-translate-y-0.5">
               <div class="flex flex-wrap items-center gap-2">
                 {t && <span class:list={['chip', t.bg]}>{t.label[locale]}</span>}
-                <span class="text-xs text-pop-ink/60">{m.authors}</span>
+                {m.authors && <span class="text-xs text-pop-ink/60">{m.authors}</span>}
               </div>
               <p class="mt-2 font-display text-base leading-snug text-pop-ink">
                 {m.url ? (
@@ -54,7 +54,7 @@ const typeChip: Record<string, { label: Record<Locale, string>; bg: string }> = 
                   m.title
                 )}
               </p>
-              <p class="mt-1 text-sm italic text-pop-ink/70">{m.venue}</p>
+              {m.venue && <p class="mt-1 text-sm italic text-pop-ink/70">{m.venue}</p>}
             </li>
           );
         })}
