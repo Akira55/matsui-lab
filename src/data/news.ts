@@ -16,8 +16,8 @@ export const news: NewsItem[] = [
     date: '2025-08-01',
     tag: 'lab',
     title: {
-      en: 'Joined Diversity & Inclusion Committee of the Japanese Society for AI',
-      ja: '人工知能学会 ダイバーシティ＆インクルージョン委員会に参加',
+      en: 'Joined the Diversity and Inclusion Promotion Committee of the Japanese Society for AI',
+      ja: '人工知能学会 多様性・包摂推進委員会に参加',
     },
     url: 'https://sites.google.com/ai-gakkai.org/jsai-dei/%E3%83%9B%E3%83%BC%E3%83%A0',
   },
