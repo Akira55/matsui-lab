@@ -19,7 +19,7 @@ export const misc: MiscItem[] = [
     year: 2026,
     date: "2026-07",
     type: "preprint",
-    authors: "",
+    authors: "Matsui, A.",
     title: "Return of the solo author: The changing division of labor in science in the age of generative AI",
     venue: "",
     url: "https://doi.org/10.48550/arXiv.2607.10780",
