@@ -97,10 +97,22 @@ function presentationType(it) {
   return 'oral';
 }
 
+// Prefer the explicitly registered url, then fall back to the DOI. Several misc
+// entries carry only a DOI (arXiv preprints register as `10.48550/arXiv.*`), and
+// looking at the url label alone left those with no link at all.
+// Note we do NOT reuse buildPaperUrl() here: it puts the DOI first, which would
+// replace a hand-registered arXiv link with a preprint-server DOI.
+function miscUrl(it) {
+  const u = (it.see_also ?? []).find((s) => s.label === 'url')?.['@id'];
+  if (u) return u;
+  const doi = it.identifiers?.doi?.[0];
+  return doi ? `https://doi.org/${doi}` : undefined;
+}
+
 function miscType(it) {
   if (it.misc_type === 'introduction_commerce_magazine') return 'column';
-  const url = (it.see_also ?? []).find((s) => s.label === 'url')?.['@id'] ?? '';
-  if (/arxiv\.org/i.test(url)) return 'preprint';
+  const url = miscUrl(it) ?? '';
+  if (/arxiv\.org/i.test(url) || /10\.48550\/arxiv/i.test(url)) return 'preprint';
   return 'working-paper';
 }
 
@@ -409,7 +421,7 @@ function buildMisc(misc) {
   return misc.map((it) => {
     const title = pickLang(it.paper_title, 'ja', 'en') ?? '';
     const venue = pickLang(it.publication_name, 'ja', 'en') ?? '';
-    const url = (it.see_also ?? []).find((s) => s.label === 'url')?.['@id'];
+    const url = miscUrl(it);
     return {
       year: parseYear(it.publication_date),
       date: it.publication_date || undefined,

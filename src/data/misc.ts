@@ -18,10 +18,11 @@ export const misc: MiscItem[] = [
   {
     year: 2026,
     date: "2026-07",
-    type: "working-paper",
+    type: "preprint",
     authors: "",
     title: "Return of the solo author: The changing division of labor in science in the age of generative AI",
     venue: "",
+    url: "https://doi.org/10.48550/arXiv.2607.10780",
   },
   {
     year: 2026,
@@ -58,10 +59,11 @@ export const misc: MiscItem[] = [
   {
     year: 2025,
     date: "2025-10",
-    type: "working-paper",
+    type: "preprint",
     authors: "Sakai, S., Kwak, H., An, J. & Matsui, A.",
     title: "Quantifying Gender Stereotypes in Japan between 1900 and 1999 with Word Embeddings",
     venue: "",
+    url: "https://doi.org/10.48550/arXiv.2510.03905",
   },
   {
     year: 2025,
@@ -74,18 +76,20 @@ export const misc: MiscItem[] = [
   {
     year: 2025,
     date: "2025-09",
-    type: "working-paper",
+    type: "preprint",
     authors: "Honna, S., Murayama, T. & Matsui, A.",
     title: "Data-driven Methods of Extracting Text Structure and Information Transfer",
     venue: "",
+    url: "https://doi.org/10.48550/arXiv.2509.12999",
   },
   {
     year: 2025,
     date: "2025-09",
-    type: "working-paper",
+    type: "preprint",
     authors: "Matsui, A., Fujikawa, K., Sasaki, R. & Adachi, R.",
     title: "User Exploration and Exploitation Behavior Under the Influence of Real-time Interactions in Live Streaming Environments",
     venue: "",
+    url: "https://doi.org/10.48550/arXiv.2509.09138",
   },
   {
     year: 2025,
@@ -275,6 +279,7 @@ export const misc: MiscItem[] = [
     authors: "松井暉",
     title: "グローバルアイ〔第48 回〕TA（Teaching Assistant）",
     venue: "人工知能",
+    url: "https://doi.org/10.11517/jjsai.34.5_735",
   },
   {
     year: 2019,
