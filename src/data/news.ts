@@ -19,7 +19,7 @@ export const news: NewsItem[] = [
       en: 'Joined Diversity & Inclusion Committee of the Japanese Society for AI',
       ja: '人工知能学会 ダイバーシティ＆インクルージョン委員会に参加',
     },
-    url: 'https://www.ai-gakkai.or.jp/about/diversity/',
+    url: 'https://sites.google.com/ai-gakkai.org/jsai-dei/%E3%83%9B%E3%83%BC%E3%83%A0',
   },
   {
     date: '2025-04-01',
