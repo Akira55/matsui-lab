@@ -1,7 +1,7 @@
 {
   "month": "2026-08",
   "source": "researchmap (data/activities.yml) + data/activities.manual.yml",
-  "count": 3,
+  "count": 4,
   "categories": {
     "論文掲載": [
       {
@@ -11,6 +11,14 @@
         "venue": "EPJ Data Science",
         "details": "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.",
         "url": "https://doi.org/10.1140/epjds/s13688-026-00687-6"
+      },
+      {
+        "title": "Gendered cultural discourse in Japan across the prewar–postwar transition: evidence from historical word embeddings",
+        "category": "論文掲載",
+        "date": "2026-08-18",
+        "venue": "EPJ Data Science",
+        "details": "Sakai, S., Kwak, H., An, J. & Matsui, A.",
+        "url": "https://doi.org/10.1140/epjds/s13688-026-00688-5"
       }
     ],
     "国際会議発表": [],

@@ -4,6 +4,12 @@
 # (このファイルは同期のたびに上書きされます)。
 
 activities:
+  - title: "Gendered cultural discourse in Japan across the prewar–postwar transition: evidence from historical word embeddings"
+    category: "論文掲載"
+    date: "2026-08-18"
+    venue: "EPJ Data Science"
+    details: "Sakai, S., Kwak, H., An, J. & Matsui, A."
+    url: "https://doi.org/10.1140/epjds/s13688-026-00688-5"
   - title: "Modeling user redemption behavior in complex digital incentive environment: an empirical study using large-scale transactional data"
     category: "論文掲載"
     date: "2026-08-10"

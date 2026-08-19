@@ -18,6 +18,15 @@ export type Publication = {
 export const publications: Publication[] = [
   {
     year: 2026,
+    date: "2026-08-18",
+    authors: "Sakai, S., Kwak, H., An, J. & Matsui, A.",
+    title: "Gendered cultural discourse in Japan across the prewar–postwar transition: evidence from historical word embeddings",
+    venue: "EPJ Data Science",
+    url: "https://doi.org/10.1140/epjds/s13688-026-00688-5",
+    type: "journal",
+  },
+  {
+    year: 2026,
     date: "2026-08-10",
     authors: "Matsui, A., Teramoto, T., Motohashi, E. & Tsurumi, H.",
     title: "Modeling user redemption behavior in complex digital incentive environment: an empirical study using large-scale transactional data",
