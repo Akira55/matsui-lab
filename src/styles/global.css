@@ -133,6 +133,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px dott
 }
 .menu-dropdown a { display: block; padding: 5px 22px; text-decoration: none; }
 .menu-dropdown a:hover { color: #fff; background: #111; }
+.mobile-menu-extras { display: none; }
 .menu-rule { display: block; height: 1px; margin: 4px 0; background: #111; }
 .menu-dropdown-narrow { width: 190px; }
 .menu-disabled { display: flex; justify-content: space-between; gap: 18px; padding: 5px 18px 5px 22px; color: #888; text-shadow: 1px 1px #fff; }
@@ -441,6 +442,7 @@ nav[aria-label="Sections"] a:hover { color: #fff !important; background: var(--m
 
 @media (max-width: 610px) {
   .desktop-menu { display: none; }
+  .mobile-menu-extras { display: block; }
 }
 
 @media (prefers-reduced-motion: reduce) {

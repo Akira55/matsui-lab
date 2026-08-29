@@ -8,10 +8,10 @@ const year = new Date().getFullYear();
 
 <footer class="mac-statusbar">
   <span>{locale === 'ja' ? '松井研究室ディスクは使用できます' : 'Matsui Lab Disk is ready'}</span>
-  <nav aria-label="External links">
-    <a href={site.socials.researchmap}>researchmap</a>
-    <a href={site.socials.kobe}>Kobe U</a>
-    <a href={site.contactForm}>{locale === 'ja' ? 'お問い合わせ…' : 'Contact…'}</a>
+  <nav aria-label={locale === 'ja' ? '外部リンク' : 'External links'}>
+    <a href={site.socials.researchmap} target="_blank" rel="noopener noreferrer">researchmap</a>
+    <a href={site.socials.kobe} target="_blank" rel="noopener noreferrer">Kobe U</a>
+    <a href={site.contactForm} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? 'お問い合わせ…' : 'Contact…'}</a>
   </nav>
   <span class="resize-handle" aria-hidden="true">◢</span>
 </footer>

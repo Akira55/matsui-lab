@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import type { Locale } from '../data/site';
 import { site } from '../data/site';
+import { ui } from '../data/i18n';
 import { u } from '../lib/url';
 
 interface Props {
@@ -21,6 +22,7 @@ const enableGA = import.meta.env.PROD && !!gaId;
 const homeHref = u(locale === 'ja' ? '/ja/' : '/');
 const researchHref = u(locale === 'ja' ? '/ja/research/' : '/research/');
 const papersHref = u(locale === 'ja' ? '/ja/publications/' : '/publications/');
+const kidPixHref = locale === 'ja' ? 'https://kidpix.app/ja.html' : 'https://kidpix.app/';
 const bootTitle = 'Welcome to MatLab';
 const bootMessage = locale === 'ja' ? '起動ディスク “松井研究室 HD” を読み込んでいます…' : 'Loading startup disk “Matsui Lab HD”…';
 const bootSkip = locale === 'ja' ? 'スキップ' : 'Skip';
@@ -79,7 +81,7 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         <button type="button" data-boot-skip>{bootSkip}</button>
       </div>
     </div>
-    <a href="#main" class="sr-only focus:not-sr-only">Skip to content</a>
+    <a href="#main" class="sr-only focus:not-sr-only">{ui[locale].skipToContent}</a>
     <Header locale={locale} current={current} />
     <div class="mac-desktop">
       <button class="desktop-reopen" type="button" data-reopen-window aria-label={locale === 'ja' ? '松井研究室ディスクを開く' : 'Open Matsui Lab Disk'}>
@@ -90,7 +92,7 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         <a href={researchHref} class="desktop-icon"><span class="mac-icon disk-icon" aria-hidden="true"></span><span>{locale === 'ja' ? '研究フォルダ' : 'Research Folder'}</span></a>
         <a href={papersHref} class="desktop-icon"><span class="mac-icon folder-icon" aria-hidden="true"></span><span>{locale === 'ja' ? '論文フォルダ' : 'Papers Folder'}</span></a>
         <a href={site.socials.cv} target="_blank" rel="noopener noreferrer" class="desktop-icon"><span class="mac-icon document-icon" aria-hidden="true"><span>CV</span></span><span>Akira's CV</span></a>
-        <a href="https://kidpix.app/ja.html" target="_blank" rel="noopener noreferrer" class="desktop-icon"><span class="mac-icon kidpix-icon" aria-hidden="true"><span></span></span><span>{locale === 'ja' ? 'キッドピクス' : 'Kid Pix'}</span></a>
+        <a href={kidPixHref} target="_blank" rel="noopener noreferrer" class="desktop-icon"><span class="mac-icon kidpix-icon" aria-hidden="true"><span></span></span><span>{locale === 'ja' ? 'キッドピクス' : 'Kid Pix'}</span></a>
       </aside>
       <div class="mac-window" data-mac-window>
         <div class="mac-titlebar" data-window-handle>

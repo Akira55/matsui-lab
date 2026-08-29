@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import type { Locale } from '../data/site';
 import { site } from '../data/site';
+import { ui } from '../data/i18n';
 
 interface Props {
   locale: Locale;
@@ -61,7 +62,7 @@ const enableGA = import.meta.env.PROD && !!gaId;
     )}
   </head>
   <body class="flex min-h-screen flex-col">
-    <a href="#main" class="sr-only focus:not-sr-only">Skip to content</a>
+    <a href="#main" class="sr-only focus:not-sr-only">{ui[locale].skipToContent}</a>
     <Header locale={locale} current={current} />
     <main id="main" class="flex-1">
       <slot />

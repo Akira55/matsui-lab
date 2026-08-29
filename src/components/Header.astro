@@ -11,6 +11,7 @@ const otherLocalePrefix = locale === 'ja' ? '' : '/ja';
 const homeHref = u(`${localePrefix}/`);
 const otherHref = u(`${otherLocalePrefix}/`);
 const modernHref = u(`/modern${localePrefix}/`);
+const kidPixHref = locale === 'ja' ? 'https://kidpix.app/ja.html' : 'https://kidpix.app/';
 const items = [
   { key: 'research', href: u(`${localePrefix}/research/`) },
   { key: 'members', href: u(`${localePrefix}/members/`) },
@@ -30,6 +31,11 @@ const items = [
       <a href={homeHref}>{locale === 'ja' ? 'ホームフォルダを開く' : 'Open Home Folder'}</a>
       <span class="menu-rule"></span>
       {items.map((item) => <a href={item.href}>{nav[locale][item.key]}</a>)}
+      <div class="mobile-menu-extras">
+        <span class="menu-rule"></span>
+        <a href={site.socials.cv} target="_blank" rel="noopener noreferrer">Akira's CV</a>
+        <a href={kidPixHref} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
+      </div>
     </div>
   </details>
   <details class="site-menu desktop-menu">
@@ -59,7 +65,7 @@ const items = [
       <a href={homeHref}>{locale === 'ja' ? 'この松井研究室について…' : 'About Matsui Lab…'}</a>
       <span class="menu-rule"></span>
       <a href={site.socials.cv} target="_blank" rel="noopener noreferrer">Akira's CV</a>
-      <a href="https://kidpix.app/ja.html" target="_blank" rel="noopener noreferrer">{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
+      <a href={kidPixHref} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
       <span class="menu-rule"></span>
       <a href={modernHref}>{locale === 'ja' ? 'モダン版へ切り替え' : 'Switch to Modern Site'}</a>
       <span class="menu-rule"></span>
