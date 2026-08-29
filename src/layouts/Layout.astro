@@ -26,6 +26,7 @@ const bootMessage = locale === 'ja' ? '起動ディスク “松井研究室 HD�
 const bootSkip = locale === 'ja' ? 'スキップ' : 'Skip';
 const isMainPage = current === 'home';
 const siteBasePath = u('/');
+const bootCharacterSrc = u('/charactor-pixel.png');
 ---
 
 <!doctype html>
@@ -71,7 +72,7 @@ const siteBasePath = u('/');
   <body>
     <div class="boot-screen" data-boot-screen role="status" aria-live="polite">
       <div class="boot-dialog">
-        <div class="boot-mac" aria-hidden="true"><span></span></div>
+        <img class="boot-character" src={bootCharacterSrc} alt="" aria-hidden="true" />
         <strong>{bootTitle}</strong>
         <p data-boot-message>{bootMessage}</p>
         <div class="boot-progress" aria-hidden="true"><span></span></div>
