@@ -299,6 +299,17 @@ body.is-window-closed .desktop-reopen { display: grid; animation: desktop-icon-i
   font-size: 11px;
 }
 .kidpix-notice a, .kidpix-statusbar a { font-weight: 700; text-decoration: underline; white-space: nowrap; }
+.cv-notice-actions { display: flex; align-items: center; gap: 14px; }
+.kidpix-notice .cv-download-button {
+  padding: 5px 10px;
+  color: #fff;
+  background: var(--mac-blue);
+  border: 2px solid #111;
+  border-radius: 4px;
+  box-shadow: inset 1px 1px rgba(255,255,255,.7), inset -1px -1px #111;
+  text-decoration: none;
+}
+.kidpix-notice .cv-download-button:active { color: #111; background: var(--mac-gold); }
 .kidpix-frame-shell { position: relative; min-height: 0; overflow: hidden; background: #fff; }
 .kidpix-frame-shell iframe { position: relative; z-index: 1; display: block; width: 100%; height: 100%; border: 0; background: #fff; }
 .kidpix-loading { position: absolute; inset: 50% auto auto 50%; margin: 0; transform: translate(-50%, -50%); font-weight: 700; }
@@ -494,6 +505,7 @@ nav[aria-label="Sections"] a:hover { color: #fff !important; background: var(--m
   .mobile-menu-extras { display: block; }
   .kidpix-dialog { width: calc(100vw - 10px); height: calc(100vh - 10px); }
   .kidpix-notice { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .cv-notice-actions { width: 100%; justify-content: space-between; gap: 8px; }
   .kidpix-statusbar > span { display: none; }
   .kidpix-statusbar { justify-content: flex-end; }
 }

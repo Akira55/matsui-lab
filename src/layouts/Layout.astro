@@ -148,7 +148,10 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         </div>
         <div class="kidpix-notice">
           <span>{locale === 'ja' ? 'Google Drive上のPDFを表示しています' : 'Displaying a PDF from Google Drive'}</span>
-          <a href={cvHref} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? '元のPDFを開く ↗' : 'Open original PDF ↗'}</a>
+          <div class="cv-notice-actions">
+            <a href={cvDownloadHref} target="_blank" rel="noopener noreferrer" download="cv_akiramatsui.pdf" class="cv-download-button">{locale === 'ja' ? '↓ PDFをダウンロード' : '↓ Download PDF'}</a>
+            <a href={cvHref} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? '元のPDFを開く ↗' : 'Open original PDF ↗'}</a>
+          </div>
         </div>
         <div class="kidpix-frame-shell">
           <p class="kidpix-loading" aria-hidden="true">{locale === 'ja' ? 'CVを読み込んでいます…' : 'Loading CV…'}</p>
@@ -165,7 +168,7 @@ const bootCharacterSrc = u('/charactor-pixel.png');
           <span>Akira Matsui · Curriculum Vitae</span>
           <div>
             <a href={cvHref} target="_blank" rel="noopener noreferrer">Google Drive ↗</a>
-            <a href={cvDownloadHref} target="_blank" rel="noopener noreferrer" class="mac-button">{locale === 'ja' ? 'ダウンロード…' : 'Download…'}</a>
+            <a href={cvDownloadHref} target="_blank" rel="noopener noreferrer" download="cv_akiramatsui.pdf" class="mac-button">{locale === 'ja' ? 'PDFをダウンロード' : 'Download PDF'}</a>
             <button type="button" class="mac-button" data-cv-close>{locale === 'ja' ? '閉じる' : 'Close'}</button>
           </div>
         </div>
