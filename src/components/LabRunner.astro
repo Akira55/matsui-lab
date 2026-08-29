@@ -106,7 +106,9 @@ const copy = locale === 'ja'
     const runnerImage = new Image();
     runnerImage.src = dialog.dataset.runnerSrc || '';
     const width = canvas.width;
-    const height = canvas.height;
+    const runnerHeight = canvas.height;
+    const starHeight = 360;
+    let height = runnerHeight;
     const ground = 207;
     const secretScore = 500;
     const runner = { x: 72, y: ground - 62, width: 48, height: 62, velocity: 0 };
@@ -177,6 +179,8 @@ const copy = locale === 'ja'
     };
 
     const reset = () => {
+      if (canvas.height !== runnerHeight) canvas.height = runnerHeight;
+      height = runnerHeight;
       obstacles = [];
       starEnemies = [];
       playerShots = [];
@@ -227,11 +231,14 @@ const copy = locale === 'ja'
     };
 
     const enterStarMode = () => {
+      if (canvas.height !== starHeight) canvas.height = starHeight;
+      height = starHeight;
       mode = 'star';
       obstacles = [];
       playerShots = [];
       enemyShots = [];
       starShip.x = width / 2 - starShip.width / 2;
+      starShip.y = height - 38;
       starDirection = 1;
       diveIn = 1500;
       starBannerUntil = performance.now() + 1800;
@@ -429,7 +436,7 @@ const copy = locale === 'ja'
       });
       if (reverse) {
         starDirection *= -1;
-        starEnemies.forEach((enemy) => { if (!enemy.diving) enemy.y += 6; });
+        starEnemies.forEach((enemy) => { if (!enemy.diving) enemy.y += 3; });
       }
 
       playerShots.forEach((shot) => { shot.y -= 9.5 * step; });
