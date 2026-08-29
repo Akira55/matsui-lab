@@ -9,6 +9,7 @@ interface Props {
 
 const { locale, characterSrc } = Astro.props;
 const bgmSrc = u('/audio/maou_loop_bgm_8bit17.m4a');
+const starBgmSrc = u('/audio/maou_bgm_8bit25.m4a');
 const copy = locale === 'ja'
   ? {
       open: 'キャラクターをクリックしてミニゲームを開く',
@@ -77,10 +78,10 @@ const copy = locale === 'ja'
     </div>
     <div class="runner-credit">
       <a href="https://maou.audio/bgm_8bit17/" target="_blank" rel="noopener noreferrer">BGM：魔王魂（森田交一）</a>
-      <span>8bit17「のどかなみどり」</span>
+      <span>Runner: <a href="https://maou.audio/bgm_8bit17/" target="_blank" rel="noopener noreferrer">8bit17</a> · Star: <a href="https://maou.audio/bgm_8bit25/" target="_blank" rel="noopener noreferrer">8bit25</a></span>
     </div>
   </div>
-  <audio data-game-bgm src={bgmSrc} preload="none" loop></audio>
+  <audio data-game-bgm data-runner-src={bgmSrc} data-star-src={starBgmSrc} src={bgmSrc} preload="none" loop></audio>
 </dialog>
 
 <script>
@@ -110,7 +111,7 @@ const copy = locale === 'ja'
     const secretScore = 500;
     const runner = { x: 72, y: ground - 62, width: 48, height: 62, velocity: 0 };
     let obstacles: Array<{ x: number; width: number; height: number; kind: number }> = [];
-    let starEnemies: Array<{ x: number; y: number; width: number; height: number; alive: boolean }> = [];
+    let starEnemies: Array<{ x: number; y: number; width: number; height: number; alive: boolean; diving: boolean; diveVx: number; divePhase: number }> = [];
     let playerShots: Array<{ x: number; y: number }> = [];
     let enemyShots: Array<{ x: number; y: number }> = [];
     const starShip = { x: width / 2 - 18, y: height - 38, width: 36, height: 23 };
@@ -122,6 +123,7 @@ const copy = locale === 'ja'
     let mode: 'ready' | 'playing' | 'over' | 'star' | 'star-over' = 'ready';
     let musicMuted = false;
     let starDirection = 1;
+    let diveIn = 2200;
     let starBannerUntil = 0;
     let commandBuffer = '';
     let leftHeld = false;
@@ -142,6 +144,18 @@ const copy = locale === 'ja'
       if (muteLabel) muteLabel.textContent = musicMuted
         ? (locale === 'ja' ? '音楽 OFF' : 'Music OFF')
         : (locale === 'ja' ? '音楽 ON' : 'Music ON');
+    };
+
+    const playBgm = (source: string | undefined) => {
+      if (!bgm || !source) return;
+      if (bgm.getAttribute('src') !== source) {
+        bgm.pause();
+        bgm.setAttribute('src', source);
+        bgm.load();
+      }
+      bgm.volume = .34;
+      bgm.muted = musicMuted;
+      bgm.play().catch(() => {});
     };
 
     // A shifted Gamma(k=3) interval feels less mechanical than a uniform roll:
@@ -196,9 +210,18 @@ const copy = locale === 'ja'
 
     const spawnStarWave = () => {
       starEnemies = [];
-      for (let row = 0; row < 3; row += 1) {
-        for (let column = 0; column < 8; column += 1) {
-          starEnemies.push({ x: 102 + column * 65, y: 43 + row * 43, width: 28, height: 20, alive: true });
+      for (let row = 0; row < 5; row += 1) {
+        for (let column = 0; column < 10; column += 1) {
+          starEnemies.push({
+            x: 45 + column * 63,
+            y: 23 + row * 29,
+            width: 28,
+            height: 20,
+            alive: true,
+            diving: false,
+            diveVx: 0,
+            divePhase: row * .7 + column * .3,
+          });
         }
       }
     };
@@ -210,9 +233,11 @@ const copy = locale === 'ja'
       enemyShots = [];
       starShip.x = width / 2 - starShip.width / 2;
       starDirection = 1;
+      diveIn = 1500;
       starBannerUntil = performance.now() + 1800;
       previous = 0;
       spawnStarWave();
+      playBgm(bgm?.dataset.starSrc);
     };
 
     const fireStarShot = () => {
@@ -266,7 +291,7 @@ const copy = locale === 'ja'
       }
     };
 
-    const drawStarEnemy = (enemy: { x: number; y: number; width: number; height: number }, rowColor: string) => {
+    const drawStarEnemy = (enemy: { x: number; y: number; width: number; height: number; diving?: boolean }, rowColor: string) => {
       if (!context) return;
       context.fillStyle = rowColor;
       context.fillRect(enemy.x + 5, enemy.y, 18, 4);
@@ -276,6 +301,10 @@ const copy = locale === 'ja'
       context.fillStyle = '#fff';
       context.fillRect(enemy.x + 6, enemy.y + 8, 3, 3);
       context.fillRect(enemy.x + 19, enemy.y + 8, 3, 3);
+      if (enemy.diving) {
+        context.fillStyle = '#efd06b';
+        context.fillRect(enemy.x + 12, enemy.y + 20, 4, 4);
+      }
     };
 
     const drawStarMode = (time: number) => {
@@ -290,7 +319,7 @@ const copy = locale === 'ja'
       }
       const colors = ['#a94d61', '#d1a83e', '#3c8f87'];
       starEnemies.forEach((enemy, index) => {
-        if (enemy.alive) drawStarEnemy(enemy, colors[Math.floor(index / 8) % colors.length]);
+        if (enemy.alive) drawStarEnemy(enemy, colors[Math.floor(index / 10) % colors.length]);
       });
       context.fillStyle = '#f5f3ea';
       playerShots.forEach((shot) => context.fillRect(shot.x, shot.y, 4, 10));
@@ -384,12 +413,23 @@ const copy = locale === 'ja'
       let reverse = false;
       starEnemies.forEach((enemy) => {
         if (!enemy.alive) return;
-        enemy.x += starDirection * .72 * step;
-        if (enemy.x < 15 || enemy.x + enemy.width > width - 15) reverse = true;
+        if (enemy.diving) {
+          enemy.divePhase += .09 * step;
+          enemy.x += (enemy.diveVx + Math.sin(enemy.divePhase) * 1.45) * step;
+          enemy.y += 3.15 * step;
+          if (enemy.y > height + 24) {
+            enemy.diving = false;
+            enemy.x = 55 + Math.random() * (width - 110);
+            enemy.y = 18;
+          }
+        } else {
+          enemy.x += starDirection * .68 * step;
+          if (enemy.x < 12 || enemy.x + enemy.width > width - 12) reverse = true;
+        }
       });
       if (reverse) {
         starDirection *= -1;
-        starEnemies.forEach((enemy) => { enemy.y += 9; });
+        starEnemies.forEach((enemy) => { if (!enemy.diving) enemy.y += 6; });
       }
 
       playerShots.forEach((shot) => { shot.y -= 9.5 * step; });
@@ -407,15 +447,31 @@ const copy = locale === 'ja'
       });
 
       const liveEnemies = starEnemies.filter((enemy) => enemy.alive);
-      if (liveEnemies.length && Math.random() < elapsed / 900) {
+      diveIn -= elapsed;
+      const divers = liveEnemies.filter((enemy) => enemy.diving);
+      if (diveIn <= 0 && divers.length < 3) {
+        const candidates = liveEnemies.filter((enemy) => !enemy.diving);
+        const attacker = candidates[Math.floor(Math.random() * candidates.length)];
+        if (attacker) {
+          attacker.diving = true;
+          attacker.diveVx = Math.max(-2.4, Math.min(2.4, (starShip.x - attacker.x) / 75));
+          attacker.divePhase = 0;
+          enemyShots.push({ x: attacker.x + attacker.width / 2, y: attacker.y + attacker.height });
+        }
+        diveIn = 850 + Math.random() * 1250;
+      }
+      if (liveEnemies.length && enemyShots.length < 12 && Math.random() < elapsed / 560) {
         const shooter = liveEnemies[Math.floor(Math.random() * liveEnemies.length)];
         enemyShots.push({ x: shooter.x + shooter.width / 2, y: shooter.y + shooter.height });
       }
       enemyShots = enemyShots.filter((shot) => shot.y < height + 12);
       const shipHit = enemyShots.some((shot) => shot.x + 4 > starShip.x && shot.x < starShip.x + starShip.width
         && shot.y + 9 > starShip.y && shot.y < starShip.y + starShip.height);
-      const invaded = liveEnemies.some((enemy) => enemy.y + enemy.height >= starShip.y);
-      if (shipHit || invaded) finishGame('star-over');
+      const rammed = liveEnemies.some((enemy) => enemy.diving
+        && enemy.x + enemy.width > starShip.x && enemy.x < starShip.x + starShip.width
+        && enemy.y + enemy.height > starShip.y && enemy.y < starShip.y + starShip.height);
+      const invaded = liveEnemies.some((enemy) => !enemy.diving && enemy.y + enemy.height >= starShip.y);
+      if (shipHit || rammed || invaded) finishGame('star-over');
       else if (!liveEnemies.length) {
         score += 100;
         enemyShots = [];
@@ -455,10 +511,7 @@ const copy = locale === 'ja'
     const openGame = () => {
       reset();
       dialog.showModal();
-      if (bgm) {
-        bgm.volume = .34;
-        bgm.play().catch(() => {});
-      }
+      playBgm(bgm?.dataset.runnerSrc);
       canvas.focus();
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(loop);
@@ -472,7 +525,7 @@ const copy = locale === 'ja'
 
     openButton.addEventListener('click', openGame);
     closeButtons.forEach((button) => button.addEventListener('click', closeGame));
-    retryButton?.addEventListener('click', () => { reset(); startOrJump(); canvas.focus(); });
+    retryButton?.addEventListener('click', () => { reset(); playBgm(bgm?.dataset.runnerSrc); startOrJump(); canvas.focus(); });
     muteButton?.addEventListener('click', () => {
       musicMuted = !musicMuted;
       try { localStorage.setItem('matsui-lab-runner-music-muted', String(musicMuted)); } catch (_) {}
