@@ -267,6 +267,55 @@ body.is-window-closed .desktop-reopen { display: grid; animation: desktop-icon-i
 }
 .kidpix-icon > span { position: absolute; z-index: 2; left: 7px; bottom: 7px; width: 9px; height: 9px; background: var(--mac-gold); border: 1px solid #111; box-shadow: 9px 0 var(--mac-red), 0 -9px var(--mac-teal), 9px -9px var(--mac-blue); }
 
+.kidpix-dialog {
+  width: min(1180px, calc(100vw - 28px));
+  height: min(880px, calc(100vh - 28px));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  background: var(--mac-platinum);
+  border: 2px solid #111;
+  box-shadow: 9px 9px 0 rgba(0,0,0,.55);
+}
+.kidpix-dialog[open] { animation: kidpix-window-open .24s steps(5, end); }
+.kidpix-dialog::backdrop {
+  background-color: rgba(56, 61, 72, .7);
+  background-image: radial-gradient(#111 27%, transparent 29%);
+  background-size: 4px 4px;
+}
+.kidpix-window { height: 100%; display: grid; grid-template-rows: 27px auto minmax(0, 1fr) auto; }
+.kidpix-titlebar { border-bottom: 2px solid #111; }
+.kidpix-titlebar .zoom-box { pointer-events: none; }
+.kidpix-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 34px;
+  padding: 5px 10px;
+  background: #fff;
+  border-bottom: 1px solid #111;
+  font-size: 11px;
+}
+.kidpix-notice a, .kidpix-statusbar a { font-weight: 700; text-decoration: underline; white-space: nowrap; }
+.kidpix-frame-shell { position: relative; min-height: 0; overflow: hidden; background: #fff; }
+.kidpix-frame-shell iframe { position: relative; z-index: 1; display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+.kidpix-loading { position: absolute; inset: 50% auto auto 50%; margin: 0; transform: translate(-50%, -50%); font-weight: 700; }
+.kidpix-statusbar {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 5px 8px 5px 12px;
+  background: var(--mac-platinum);
+  border-top: 2px solid #111;
+  font-size: 11px;
+}
+.kidpix-statusbar > div { display: flex; align-items: center; gap: 14px; }
+.kidpix-statusbar .mac-button { min-width: 76px; margin: 0; padding: 5px 14px; }
+
 #main { min-height: 62vh; background: var(--mac-paper); }
 .font-display { font-family: Chicago, Charcoal, Geneva, Osaka, "Hiragino Kaku Gothic ProN", sans-serif !important; }
 .font-kana { font-family: Osaka, "Hiragino Kaku Gothic ProN", Geneva, sans-serif !important; }
@@ -443,6 +492,10 @@ nav[aria-label="Sections"] a:hover { color: #fff !important; background: var(--m
 @media (max-width: 610px) {
   .desktop-menu { display: none; }
   .mobile-menu-extras { display: block; }
+  .kidpix-dialog { width: calc(100vw - 10px); height: calc(100vh - 10px); }
+  .kidpix-notice { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .kidpix-statusbar > span { display: none; }
+  .kidpix-statusbar { justify-content: flex-end; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -470,3 +523,7 @@ nav[aria-label="Sections"] a:hover { color: #fff !important; background: var(--m
 }
 @keyframes desktop-icon-in { from { opacity: 0; transform: scale(.5); } to { opacity: 1; transform: scale(1); } }
 @keyframes pixel-character-idle { 0%, 86%, 100% { transform: translateY(0); } 90%, 96% { transform: translateY(-4px); } }
+@keyframes kidpix-window-open {
+  from { opacity: 0; transform: scale(.15, .08); }
+  to { opacity: 1; transform: scale(1); }
+}

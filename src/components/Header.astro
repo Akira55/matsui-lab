@@ -34,7 +34,7 @@ const items = [
       <div class="mobile-menu-extras">
         <span class="menu-rule"></span>
         <a href={site.socials.cv} target="_blank" rel="noopener noreferrer">Akira's CV</a>
-        <a href={kidPixHref} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
+        <a href={kidPixHref} target="_blank" rel="noopener noreferrer" data-kidpix-open>{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
       </div>
     </div>
   </details>
@@ -65,7 +65,7 @@ const items = [
       <a href={homeHref}>{locale === 'ja' ? 'この松井研究室について…' : 'About Matsui Lab…'}</a>
       <span class="menu-rule"></span>
       <a href={site.socials.cv} target="_blank" rel="noopener noreferrer">Akira's CV</a>
-      <a href={kidPixHref} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
+      <a href={kidPixHref} target="_blank" rel="noopener noreferrer" data-kidpix-open>{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
       <span class="menu-rule"></span>
       <a href={modernHref}>{locale === 'ja' ? 'モダン版へ切り替え' : 'Switch to Modern Site'}</a>
       <span class="menu-rule"></span>

@@ -92,7 +92,7 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         <a href={researchHref} class="desktop-icon"><span class="mac-icon disk-icon" aria-hidden="true"></span><span>{locale === 'ja' ? '研究フォルダ' : 'Research Folder'}</span></a>
         <a href={papersHref} class="desktop-icon"><span class="mac-icon folder-icon" aria-hidden="true"></span><span>{locale === 'ja' ? '論文フォルダ' : 'Papers Folder'}</span></a>
         <a href={site.socials.cv} target="_blank" rel="noopener noreferrer" class="desktop-icon"><span class="mac-icon document-icon" aria-hidden="true"><span>CV</span></span><span>Akira's CV</span></a>
-        <a href={kidPixHref} target="_blank" rel="noopener noreferrer" class="desktop-icon"><span class="mac-icon kidpix-icon" aria-hidden="true"><span></span></span><span>{locale === 'ja' ? 'キッドピクス' : 'Kid Pix'}</span></a>
+        <a href={kidPixHref} target="_blank" rel="noopener noreferrer" class="desktop-icon" data-kidpix-open><span class="mac-icon kidpix-icon" aria-hidden="true"><span></span></span><span>{locale === 'ja' ? 'キッドピクス' : 'Kid Pix'}</span></a>
       </aside>
       <div class="mac-window" data-mac-window>
         <div class="mac-titlebar" data-window-handle>
@@ -104,6 +104,37 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         <Footer locale={locale} />
       </div>
     </div>
+    <dialog class="kidpix-dialog" data-kidpix-dialog aria-labelledby="kidpix-window-title">
+      <div class="kidpix-window">
+        <div class="mac-titlebar kidpix-titlebar">
+          <button class="close-box" type="button" data-kidpix-close aria-label={locale === 'ja' ? 'Kid Pixを閉じる' : 'Close Kid Pix'}></button>
+          <span id="kidpix-window-title">Kid Pix — External Application</span>
+          <span class="zoom-box" aria-hidden="true"></span>
+        </div>
+        <div class="kidpix-notice">
+          <span>{locale === 'ja' ? '外部サイト kidpix.app を表示しています' : 'Displaying the external site kidpix.app'}</span>
+          <a href={kidPixHref} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? '元のサイトで開く ↗' : 'Open original site ↗'}</a>
+        </div>
+        <div class="kidpix-frame-shell">
+          <p class="kidpix-loading" aria-hidden="true">{locale === 'ja' ? 'Kid Pixを読み込んでいます…' : 'Loading Kid Pix…'}</p>
+          <iframe
+            data-kidpix-frame
+            data-src={kidPixHref}
+            src="about:blank"
+            title={locale === 'ja' ? '外部サイトのJS Kid Pix' : 'External JS Kid Pix application'}
+            allow="autoplay; clipboard-write"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+        <div class="kidpix-statusbar">
+          <span>JS Kid Pix by vikrum</span>
+          <div>
+            <a href="https://github.com/vikrum/kidpix" target="_blank" rel="noopener noreferrer">{locale === 'ja' ? '出典・ライセンス' : 'Source & license'}</a>
+            <button type="button" class="mac-button" data-kidpix-close>{locale === 'ja' ? '閉じる' : 'Close'}</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
     <script is:inline>
       (() => {
         const root = document.documentElement;
@@ -115,6 +146,9 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         const reopenButton = document.querySelector('[data-reopen-window]');
         const zoomButton = document.querySelector('[data-zoom-window]');
         const handle = document.querySelector('[data-window-handle]');
+        const kidPixDialog = document.querySelector('[data-kidpix-dialog]');
+        const kidPixFrame = document.querySelector('[data-kidpix-frame]');
+        let kidPixOpener = null;
 
         const finishBoot = () => {
           if (!root.classList.contains('boot-required')) return;
@@ -181,6 +215,26 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         };
         handle?.addEventListener('pointerup', stopDrag);
         handle?.addEventListener('pointercancel', stopDrag);
+
+        document.querySelectorAll('[data-kidpix-open]').forEach((link) => {
+          link.addEventListener('click', (event) => {
+            if (!kidPixDialog?.showModal || !kidPixFrame) return;
+            event.preventDefault();
+            kidPixOpener = link;
+            if (kidPixFrame.getAttribute('src') === 'about:blank') {
+              kidPixFrame.setAttribute('src', kidPixFrame.dataset.src);
+            }
+            kidPixDialog.showModal();
+          });
+        });
+
+        document.querySelectorAll('[data-kidpix-close]').forEach((button) => {
+          button.addEventListener('click', () => kidPixDialog?.close());
+        });
+        kidPixDialog?.addEventListener('click', (event) => {
+          if (event.target === kidPixDialog) kidPixDialog.close();
+        });
+        kidPixDialog?.addEventListener('close', () => kidPixOpener?.focus());
       })();
     </script>
   </body>
