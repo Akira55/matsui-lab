@@ -107,15 +107,25 @@ const copy = locale === 'ja'
     const width = canvas.width;
     const height = canvas.height;
     const ground = 207;
+    const secretScore = 250;
     const runner = { x: 72, y: ground - 62, width: 48, height: 62, velocity: 0 };
     let obstacles: Array<{ x: number; width: number; height: number; kind: number }> = [];
+    let starEnemies: Array<{ x: number; y: number; width: number; height: number; alive: boolean }> = [];
+    let playerShots: Array<{ x: number; y: number }> = [];
+    let enemyShots: Array<{ x: number; y: number }> = [];
+    const starShip = { x: width / 2 - 18, y: height - 38, width: 36, height: 23 };
     let frame = 0;
     let previous = 0;
     let spawnIn = 1000;
     let score = 0;
     let high = 0;
-    let mode: 'ready' | 'playing' | 'over' = 'ready';
+    let mode: 'ready' | 'playing' | 'over' | 'star' | 'star-over' = 'ready';
     let musicMuted = false;
+    let starDirection = 1;
+    let starBannerUntil = 0;
+    let commandBuffer = '';
+    let leftHeld = false;
+    let rightHeld = false;
 
     try { high = Number(localStorage.getItem('matsui-lab-runner-high') || 0); } catch (_) {}
     try { musicMuted = localStorage.getItem('matsui-lab-runner-music-muted') === 'true'; } catch (_) {}
@@ -154,20 +164,60 @@ const copy = locale === 'ja'
 
     const reset = () => {
       obstacles = [];
+      starEnemies = [];
+      playerShots = [];
+      enemyShots = [];
       runner.y = ground - runner.height;
       runner.velocity = 0;
       score = 0;
       spawnIn = nextSpawnDelay();
       mode = 'ready';
+      commandBuffer = '';
+      leftHeld = false;
+      rightHeld = false;
       previous = 0;
       updateScores();
       draw();
     };
 
     const startOrJump = () => {
+      if (mode === 'star') {
+        fireStarShot();
+        return;
+      }
+      if (mode === 'star-over') {
+        enterStarMode();
+        return;
+      }
       if (mode === 'over') reset();
       if (mode === 'ready') mode = 'playing';
       if (runner.y >= ground - runner.height - 1) runner.velocity = -12.8;
+    };
+
+    const spawnStarWave = () => {
+      starEnemies = [];
+      for (let row = 0; row < 3; row += 1) {
+        for (let column = 0; column < 8; column += 1) {
+          starEnemies.push({ x: 102 + column * 65, y: 43 + row * 43, width: 28, height: 20, alive: true });
+        }
+      }
+    };
+
+    const enterStarMode = () => {
+      mode = 'star';
+      obstacles = [];
+      playerShots = [];
+      enemyShots = [];
+      starShip.x = width / 2 - starShip.width / 2;
+      starDirection = 1;
+      starBannerUntil = performance.now() + 1800;
+      previous = 0;
+      spawnStarWave();
+    };
+
+    const fireStarShot = () => {
+      if (mode !== 'star' || playerShots.length >= 4) return;
+      playerShots.push({ x: starShip.x + starShip.width / 2 - 2, y: starShip.y - 8 });
     };
 
     const drawFolder = (x: number, y: number, w: number, h: number) => {
@@ -216,9 +266,69 @@ const copy = locale === 'ja'
       }
     };
 
-    const draw = () => {
+    const drawStarEnemy = (enemy: { x: number; y: number; width: number; height: number }, rowColor: string) => {
+      if (!context) return;
+      context.fillStyle = rowColor;
+      context.fillRect(enemy.x + 5, enemy.y, 18, 4);
+      context.fillRect(enemy.x, enemy.y + 5, 28, 9);
+      context.fillRect(enemy.x + 4, enemy.y + 14, 6, 5);
+      context.fillRect(enemy.x + 18, enemy.y + 14, 6, 5);
+      context.fillStyle = '#fff';
+      context.fillRect(enemy.x + 6, enemy.y + 8, 3, 3);
+      context.fillRect(enemy.x + 19, enemy.y + 8, 3, 3);
+    };
+
+    const drawStarMode = (time: number) => {
+      if (!context) return;
+      context.fillStyle = '#050816';
+      context.fillRect(0, 0, width, height);
+      for (let i = 0; i < 48; i += 1) {
+        const x = (i * 83 + 17) % width;
+        const y = (i * 47 + Math.floor(score * 2)) % height;
+        context.fillStyle = i % 5 === 0 ? '#efd06b' : '#fff';
+        context.fillRect(x, y, i % 4 === 0 ? 2 : 1, i % 4 === 0 ? 2 : 1);
+      }
+      const colors = ['#a94d61', '#d1a83e', '#3c8f87'];
+      starEnemies.forEach((enemy, index) => {
+        if (enemy.alive) drawStarEnemy(enemy, colors[Math.floor(index / 8) % colors.length]);
+      });
+      context.fillStyle = '#f5f3ea';
+      playerShots.forEach((shot) => context.fillRect(shot.x, shot.y, 4, 10));
+      context.fillStyle = '#ef6c57';
+      enemyShots.forEach((shot) => context.fillRect(shot.x, shot.y, 4, 9));
+      context.fillStyle = '#1d3f78';
+      context.fillRect(starShip.x + 14, starShip.y, 8, 5);
+      context.fillRect(starShip.x + 8, starShip.y + 5, 20, 7);
+      context.fillRect(starShip.x + 2, starShip.y + 12, 32, 7);
+      context.fillStyle = '#efd06b';
+      context.fillRect(starShip.x + 15, starShip.y + 19, 6, 4);
+      context.fillStyle = '#fff';
+      context.font = 'bold 11px Geneva, sans-serif';
+      context.textAlign = 'left';
+      context.fillText('← → MOVE   SPACE / CLICK FIRE', 12, height - 10);
+
+      if (time < starBannerUntil || mode === 'star-over') {
+        context.fillStyle = 'rgba(5,8,22,.88)';
+        context.fillRect(155, 83, 410, 88);
+        context.strokeStyle = '#efd06b';
+        context.lineWidth = 3;
+        context.strokeRect(155, 83, 410, 88);
+        context.fillStyle = '#fff';
+        context.textAlign = 'center';
+        context.font = 'bold 25px Geneva, sans-serif';
+        context.fillText(mode === 'star-over' ? words.over : 'AKIRA STAR MODE', width / 2, 119);
+        context.font = '13px Geneva, sans-serif';
+        context.fillText(mode === 'star-over' ? words.again : '← → MOVE   ·   SPACE / CLICK FIRE', width / 2, 148);
+      }
+    };
+
+    const draw = (time = 0) => {
       if (!context) return;
       context.imageSmoothingEnabled = false;
+      if (mode === 'star' || mode === 'star-over') {
+        drawStarMode(time);
+        return;
+      }
       context.fillStyle = '#f7f6ef';
       context.fillRect(0, 0, width, height);
       context.fillStyle = '#d6d5ce';
@@ -258,11 +368,69 @@ const copy = locale === 'ja'
         && runner.y + paddingTop < ground;
     };
 
+    const finishGame = (nextMode: 'over' | 'star-over') => {
+      mode = nextMode;
+      high = Math.max(high, Math.floor(score));
+      try { localStorage.setItem('matsui-lab-runner-high', String(high)); } catch (_) {}
+      updateScores();
+    };
+
+    const updateStarMode = (elapsed: number) => {
+      const step = elapsed / 16.67;
+      if (leftHeld) starShip.x -= 6.5 * step;
+      if (rightHeld) starShip.x += 6.5 * step;
+      starShip.x = Math.max(8, Math.min(width - starShip.width - 8, starShip.x));
+
+      let reverse = false;
+      starEnemies.forEach((enemy) => {
+        if (!enemy.alive) return;
+        enemy.x += starDirection * .72 * step;
+        if (enemy.x < 15 || enemy.x + enemy.width > width - 15) reverse = true;
+      });
+      if (reverse) {
+        starDirection *= -1;
+        starEnemies.forEach((enemy) => { enemy.y += 9; });
+      }
+
+      playerShots.forEach((shot) => { shot.y -= 9.5 * step; });
+      enemyShots.forEach((shot) => { shot.y += 5.4 * step; });
+      playerShots = playerShots.filter((shot) => {
+        const hit = starEnemies.find((enemy) => enemy.alive
+          && shot.x + 4 > enemy.x && shot.x < enemy.x + enemy.width
+          && shot.y < enemy.y + enemy.height && shot.y + 10 > enemy.y);
+        if (hit) {
+          hit.alive = false;
+          score += 20;
+          return false;
+        }
+        return shot.y > -12;
+      });
+
+      const liveEnemies = starEnemies.filter((enemy) => enemy.alive);
+      if (liveEnemies.length && Math.random() < elapsed / 900) {
+        const shooter = liveEnemies[Math.floor(Math.random() * liveEnemies.length)];
+        enemyShots.push({ x: shooter.x + shooter.width / 2, y: shooter.y + shooter.height });
+      }
+      enemyShots = enemyShots.filter((shot) => shot.y < height + 12);
+      const shipHit = enemyShots.some((shot) => shot.x + 4 > starShip.x && shot.x < starShip.x + starShip.width
+        && shot.y + 9 > starShip.y && shot.y < starShip.y + starShip.height);
+      const invaded = liveEnemies.some((enemy) => enemy.y + enemy.height >= starShip.y);
+      if (shipHit || invaded) finishGame('star-over');
+      else if (!liveEnemies.length) {
+        score += 100;
+        enemyShots = [];
+        spawnStarWave();
+      }
+      updateScores();
+    };
+
     const loop = (time: number) => {
       if (!dialog.open) return;
       const elapsed = previous ? Math.min(34, time - previous) : 16.67;
       previous = time;
-      if (mode === 'playing') {
+      if (mode === 'star') {
+        updateStarMode(elapsed);
+      } else if (mode === 'playing') {
         const step = elapsed / 16.67;
         const speed = Math.min(11, 5.5 + score / 260);
         runner.velocity += .72 * step;
@@ -276,14 +444,11 @@ const copy = locale === 'ja'
         obstacles.forEach((obstacle) => { obstacle.x -= speed * step; });
         obstacles = obstacles.filter((obstacle) => obstacle.x + obstacle.width > -10);
         score += elapsed / 92;
-        if (obstacles.some(collide)) {
-          mode = 'over';
-          high = Math.max(high, Math.floor(score));
-          try { localStorage.setItem('matsui-lab-runner-high', String(high)); } catch (_) {}
-        }
+        if (score >= secretScore) enterStarMode();
+        else if (obstacles.some(collide)) finishGame('over');
         updateScores();
       }
-      draw();
+      draw(time);
       frame = requestAnimationFrame(loop);
     };
 
@@ -315,12 +480,41 @@ const copy = locale === 'ja'
       if (!musicMuted && bgm?.paused) bgm.play().catch(() => {});
       canvas.focus();
     });
-    canvas.addEventListener('pointerdown', (event) => { event.preventDefault(); startOrJump(); });
+    canvas.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      if (mode === 'star') {
+        const rect = canvas.getBoundingClientRect();
+        starShip.x = (event.clientX - rect.left) * (width / rect.width) - starShip.width / 2;
+      }
+      startOrJump();
+    });
     dialog.addEventListener('cancel', (event) => { event.preventDefault(); closeGame(); });
     document.addEventListener('keydown', (event) => {
-      if (!dialog.open || !['Space', 'ArrowUp'].includes(event.code)) return;
-      event.preventDefault();
-      startOrJump();
+      if (!dialog.open) return;
+      if (event.key.length === 1 && /^[a-z]$/i.test(event.key)) {
+        commandBuffer = `${commandBuffer}${event.key.toLowerCase()}`.slice(-5);
+        if (commandBuffer === 'akira' && mode !== 'star') enterStarMode();
+      }
+      if (mode === 'star') {
+        if (event.code === 'ArrowLeft') leftHeld = true;
+        if (event.code === 'ArrowRight') rightHeld = true;
+        if (['Space', 'ArrowLeft', 'ArrowRight'].includes(event.code)) event.preventDefault();
+        if (event.code === 'Space' && !event.repeat) fireStarShot();
+        return;
+      }
+      if (mode === 'star-over' && event.code === 'Space') {
+        event.preventDefault();
+        enterStarMode();
+        return;
+      }
+      if (['Space', 'ArrowUp'].includes(event.code)) {
+        event.preventDefault();
+        startOrJump();
+      }
+    });
+    document.addEventListener('keyup', (event) => {
+      if (event.code === 'ArrowLeft') leftHeld = false;
+      if (event.code === 'ArrowRight') rightHeld = false;
     });
     runnerImage.addEventListener('load', draw);
     updateScores();
