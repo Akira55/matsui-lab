@@ -1,5 +1,6 @@
 ---
 import type { Locale } from '../data/site';
+import { u } from '../lib/url';
 
 interface Props {
   locale: Locale;
@@ -7,6 +8,7 @@ interface Props {
 }
 
 const { locale, characterSrc } = Astro.props;
+const bgmSrc = u('/audio/maou_loop_bgm_8bit17.m4a');
 const copy = locale === 'ja'
   ? {
       open: 'キャラクターをクリックしてミニゲームを開く',
@@ -20,6 +22,7 @@ const copy = locale === 'ja'
       retry: 'もう一度',
       close: '終了',
       closeLabel: 'ゲームを閉じる',
+      musicOn: '音楽 ON',
     }
   : {
       open: 'Click the character to open the mini game',
@@ -33,6 +36,7 @@ const copy = locale === 'ja'
       retry: 'Try Again',
       close: 'Quit',
       closeLabel: 'Close game',
+      musicOn: 'Music ON',
     };
 ---
 
@@ -49,6 +53,10 @@ const copy = locale === 'ja'
       <span class="runner-zoom-box" aria-hidden="true"></span>
     </div>
     <div class="runner-toolbar" aria-live="polite">
+      <button type="button" class="runner-mute" data-game-mute aria-pressed="false" aria-label={locale === 'ja' ? '音楽をミュートする' : 'Mute music'}>
+        <span aria-hidden="true" data-game-mute-icon>♪</span>
+        <span data-game-mute-label>{copy.musicOn}</span>
+      </button>
       <span>{copy.score}: <b data-game-score>00000</b></span>
       <span>{copy.high}: <b data-game-high>00000</b></span>
     </div>
@@ -67,7 +75,12 @@ const copy = locale === 'ja'
         <button type="button" class="default-button" data-game-close>{copy.close}</button>
       </div>
     </div>
+    <div class="runner-credit">
+      <a href="https://maou.audio/bgm_8bit17/" target="_blank" rel="noopener noreferrer">BGM：魔王魂（森田交一）</a>
+      <span>8bit17「のどかなみどり」</span>
+    </div>
   </div>
+  <audio data-game-bgm src={bgmSrc} preload="none" loop></audio>
 </dialog>
 
 <script>
@@ -80,6 +93,10 @@ const copy = locale === 'ja'
     const scoreOutput = dialog.querySelector<HTMLElement>('[data-game-score]');
     const highOutput = dialog.querySelector<HTMLElement>('[data-game-high]');
     const retryButton = dialog.querySelector<HTMLButtonElement>('[data-game-retry]');
+    const muteButton = dialog.querySelector<HTMLButtonElement>('[data-game-mute]');
+    const muteIcon = dialog.querySelector<HTMLElement>('[data-game-mute-icon]');
+    const muteLabel = dialog.querySelector<HTMLElement>('[data-game-mute-label]');
+    const bgm = dialog.querySelector<HTMLAudioElement>('[data-game-bgm]');
     const closeButtons = dialog.querySelectorAll<HTMLButtonElement>('[data-game-close]');
     const locale = document.documentElement.lang;
     const words = locale === 'ja'
@@ -98,8 +115,24 @@ const copy = locale === 'ja'
     let score = 0;
     let high = 0;
     let mode: 'ready' | 'playing' | 'over' = 'ready';
+    let musicMuted = false;
 
     try { high = Number(localStorage.getItem('matsui-lab-runner-high') || 0); } catch (_) {}
+    try { musicMuted = localStorage.getItem('matsui-lab-runner-music-muted') === 'true'; } catch (_) {}
+
+    const updateMusicButton = () => {
+      if (bgm) bgm.muted = musicMuted;
+      if (muteButton) {
+        muteButton.setAttribute('aria-pressed', String(musicMuted));
+        muteButton.setAttribute('aria-label', musicMuted
+          ? (locale === 'ja' ? '音楽を再生する' : 'Turn music on')
+          : (locale === 'ja' ? '音楽をミュートする' : 'Mute music'));
+      }
+      if (muteIcon) muteIcon.textContent = musicMuted ? '×' : '♪';
+      if (muteLabel) muteLabel.textContent = musicMuted
+        ? (locale === 'ja' ? '音楽 OFF' : 'Music OFF')
+        : (locale === 'ja' ? '音楽 ON' : 'Music ON');
+    };
 
     // A shifted Gamma(k=3) interval feels less mechanical than a uniform roll:
     // short gaps are possible, long rests occasionally occur, and impossible
@@ -257,12 +290,17 @@ const copy = locale === 'ja'
     const openGame = () => {
       reset();
       dialog.showModal();
+      if (bgm) {
+        bgm.volume = .34;
+        bgm.play().catch(() => {});
+      }
       canvas.focus();
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(loop);
     };
     const closeGame = () => {
       cancelAnimationFrame(frame);
+      bgm?.pause();
       dialog.close();
       openButton.focus();
     };
@@ -270,6 +308,13 @@ const copy = locale === 'ja'
     openButton.addEventListener('click', openGame);
     closeButtons.forEach((button) => button.addEventListener('click', closeGame));
     retryButton?.addEventListener('click', () => { reset(); startOrJump(); canvas.focus(); });
+    muteButton?.addEventListener('click', () => {
+      musicMuted = !musicMuted;
+      try { localStorage.setItem('matsui-lab-runner-music-muted', String(musicMuted)); } catch (_) {}
+      updateMusicButton();
+      if (!musicMuted && bgm?.paused) bgm.play().catch(() => {});
+      canvas.focus();
+    });
     canvas.addEventListener('pointerdown', (event) => { event.preventDefault(); startOrJump(); });
     dialog.addEventListener('cancel', (event) => { event.preventDefault(); closeGame(); });
     document.addEventListener('keydown', (event) => {
@@ -279,6 +324,7 @@ const copy = locale === 'ja'
     });
     runnerImage.addEventListener('load', draw);
     updateScores();
+    updateMusicButton();
     draw();
   }
 </script>
@@ -351,6 +397,21 @@ const copy = locale === 'ja'
     font: 700 12px Chicago, Charcoal, Geneva, Osaka, sans-serif;
   }
   .runner-toolbar b { display: inline-block; min-width: 43px; font-variant-numeric: tabular-nums; }
+  .runner-mute {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: auto;
+    padding: 2px 7px;
+    color: #151515;
+    background: #fff;
+    border: 1px solid #151515;
+    box-shadow: 1px 1px #777;
+    font: inherit;
+    cursor: pointer;
+  }
+  .runner-mute[aria-pressed="true"] { color: #666; background: #c7c6bf; box-shadow: inset 1px 1px #777; }
+  .runner-mute > span:first-child { width: 11px; font-size: 15px; line-height: 1; text-align: center; }
   .runner-canvas { display: block; width: 100%; height: auto; background: #f7f6ef; cursor: pointer; image-rendering: pixelated; touch-action: manipulation; }
   .runner-controls {
     min-height: 68px;
@@ -367,11 +428,23 @@ const copy = locale === 'ja'
   .runner-controls button { min-width: 86px; font-size: 12px; }
   .runner-controls kbd { padding: 2px 5px; background: #fff; border: 1px solid #151515; box-shadow: 1px 1px #777; font: inherit; }
   .mouse-symbol { display: inline-block; padding: 0 4px; background: #fff; border: 1px solid #151515; }
+  .runner-credit {
+    min-height: 25px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 10px;
+    background: #fff;
+    border-top: 1px solid #151515;
+    font-size: 10px;
+  }
+  .runner-credit a { font-weight: 700; text-decoration: underline; }
 
   @media (max-width: 600px) {
     .runner-controls { align-items: stretch; flex-direction: column; }
     .runner-controls > span { text-align: center; }
     .runner-controls > div { justify-content: center; }
     .runner-toolbar { justify-content: center; }
+    .runner-credit { align-items: center; flex-direction: column; gap: 2px; }
   }
 </style>
