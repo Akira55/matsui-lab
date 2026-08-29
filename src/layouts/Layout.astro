@@ -25,6 +25,8 @@ const papersHref = u(locale === 'ja' ? '/ja/publications/' : '/publications/');
 const kidPixHref = locale === 'ja' ? 'https://kidpix.app/ja.html' : 'https://kidpix.app/';
 const cvHref = site.socials.cv;
 const cvPreviewHref = cvHref.replace(/\/view(?:\?.*)?$/, '/preview');
+const cvFileId = cvHref.match(/\/d\/([^/]+)/)?.[1];
+const cvDownloadHref = cvFileId ? `https://drive.google.com/uc?export=download&id=${cvFileId}` : cvHref;
 const bootTitle = 'Welcome to MatLab';
 const bootMessage = locale === 'ja' ? '起動ディスク “松井研究室 HD” を読み込んでいます…' : 'Loading startup disk “Matsui Lab HD”…';
 const bootSkip = locale === 'ja' ? 'スキップ' : 'Skip';
@@ -163,6 +165,7 @@ const bootCharacterSrc = u('/charactor-pixel.png');
           <span>Akira Matsui · Curriculum Vitae</span>
           <div>
             <a href={cvHref} target="_blank" rel="noopener noreferrer">Google Drive ↗</a>
+            <a href={cvDownloadHref} target="_blank" rel="noopener noreferrer" class="mac-button">{locale === 'ja' ? 'ダウンロード…' : 'Download…'}</a>
             <button type="button" class="mac-button" data-cv-close>{locale === 'ja' ? '閉じる' : 'Close'}</button>
           </div>
         </div>
