@@ -23,6 +23,8 @@ const homeHref = u(locale === 'ja' ? '/ja/' : '/');
 const researchHref = u(locale === 'ja' ? '/ja/research/' : '/research/');
 const papersHref = u(locale === 'ja' ? '/ja/publications/' : '/publications/');
 const kidPixHref = locale === 'ja' ? 'https://kidpix.app/ja.html' : 'https://kidpix.app/';
+const cvHref = site.socials.cv;
+const cvPreviewHref = cvHref.replace(/\/view(?:\?.*)?$/, '/preview');
 const bootTitle = 'Welcome to MatLab';
 const bootMessage = locale === 'ja' ? '起動ディスク “松井研究室 HD” を読み込んでいます…' : 'Loading startup disk “Matsui Lab HD”…';
 const bootSkip = locale === 'ja' ? 'スキップ' : 'Skip';
@@ -91,7 +93,7 @@ const bootCharacterSrc = u('/charactor-pixel.png');
       <aside class="desktop-icons" aria-label={locale === 'ja' ? 'デスクトップ' : 'Desktop'}>
         <a href={researchHref} class="desktop-icon"><span class="mac-icon disk-icon" aria-hidden="true"></span><span>{locale === 'ja' ? '研究フォルダ' : 'Research Folder'}</span></a>
         <a href={papersHref} class="desktop-icon"><span class="mac-icon folder-icon" aria-hidden="true"></span><span>{locale === 'ja' ? '論文フォルダ' : 'Papers Folder'}</span></a>
-        <a href={site.socials.cv} target="_blank" rel="noopener noreferrer" class="desktop-icon"><span class="mac-icon document-icon" aria-hidden="true"><span>CV</span></span><span>Akira's CV</span></a>
+        <a href={cvHref} target="_blank" rel="noopener noreferrer" class="desktop-icon" data-cv-open><span class="mac-icon document-icon" aria-hidden="true"><span>CV</span></span><span>Akira's CV</span></a>
         <a href={kidPixHref} target="_blank" rel="noopener noreferrer" class="desktop-icon" data-kidpix-open><span class="mac-icon kidpix-icon" aria-hidden="true"><span></span></span><span>{locale === 'ja' ? 'キッドピクス' : 'Kid Pix'}</span></a>
       </aside>
       <div class="mac-window" data-mac-window>
@@ -135,6 +137,37 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         </div>
       </div>
     </dialog>
+    <dialog class="kidpix-dialog" data-cv-dialog aria-labelledby="cv-window-title">
+      <div class="kidpix-window">
+        <div class="mac-titlebar kidpix-titlebar">
+          <button class="close-box" type="button" data-cv-close aria-label={locale === 'ja' ? 'CVを閉じる' : 'Close CV'}></button>
+          <span id="cv-window-title">Akira's CV</span>
+          <span class="zoom-box" aria-hidden="true"></span>
+        </div>
+        <div class="kidpix-notice">
+          <span>{locale === 'ja' ? 'Google Drive上のPDFを表示しています' : 'Displaying a PDF from Google Drive'}</span>
+          <a href={cvHref} target="_blank" rel="noopener noreferrer">{locale === 'ja' ? '元のPDFを開く ↗' : 'Open original PDF ↗'}</a>
+        </div>
+        <div class="kidpix-frame-shell">
+          <p class="kidpix-loading" aria-hidden="true">{locale === 'ja' ? 'CVを読み込んでいます…' : 'Loading CV…'}</p>
+          <iframe
+            data-cv-frame
+            data-src={cvPreviewHref}
+            src="about:blank"
+            title={locale === 'ja' ? '松井彰人のCV PDF' : "Akira Matsui's CV PDF"}
+            allow="fullscreen"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+        <div class="kidpix-statusbar">
+          <span>Akira Matsui · Curriculum Vitae</span>
+          <div>
+            <a href={cvHref} target="_blank" rel="noopener noreferrer">Google Drive ↗</a>
+            <button type="button" class="mac-button" data-cv-close>{locale === 'ja' ? '閉じる' : 'Close'}</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
     <script is:inline>
       (() => {
         const root = document.documentElement;
@@ -149,6 +182,9 @@ const bootCharacterSrc = u('/charactor-pixel.png');
         const kidPixDialog = document.querySelector('[data-kidpix-dialog]');
         const kidPixFrame = document.querySelector('[data-kidpix-frame]');
         let kidPixOpener = null;
+        const cvDialog = document.querySelector('[data-cv-dialog]');
+        const cvFrame = document.querySelector('[data-cv-frame]');
+        let cvOpener = null;
 
         const finishBoot = () => {
           if (!root.classList.contains('boot-required')) return;
@@ -235,6 +271,26 @@ const bootCharacterSrc = u('/charactor-pixel.png');
           if (event.target === kidPixDialog) kidPixDialog.close();
         });
         kidPixDialog?.addEventListener('close', () => kidPixOpener?.focus());
+
+        document.querySelectorAll('[data-cv-open]').forEach((link) => {
+          link.addEventListener('click', (event) => {
+            if (!cvDialog?.showModal || !cvFrame) return;
+            event.preventDefault();
+            cvOpener = link;
+            if (cvFrame.getAttribute('src') === 'about:blank') {
+              cvFrame.setAttribute('src', cvFrame.dataset.src);
+            }
+            cvDialog.showModal();
+          });
+        });
+
+        document.querySelectorAll('[data-cv-close]').forEach((button) => {
+          button.addEventListener('click', () => cvDialog?.close());
+        });
+        cvDialog?.addEventListener('click', (event) => {
+          if (event.target === cvDialog) cvDialog.close();
+        });
+        cvDialog?.addEventListener('close', () => cvOpener?.focus());
       })();
     </script>
   </body>

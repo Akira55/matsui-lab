@@ -33,7 +33,7 @@ const items = [
       {items.map((item) => <a href={item.href}>{nav[locale][item.key]}</a>)}
       <div class="mobile-menu-extras">
         <span class="menu-rule"></span>
-        <a href={site.socials.cv} target="_blank" rel="noopener noreferrer">Akira's CV</a>
+        <a href={site.socials.cv} target="_blank" rel="noopener noreferrer" data-cv-open>Akira's CV</a>
         <a href={kidPixHref} target="_blank" rel="noopener noreferrer" data-kidpix-open>{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
       </div>
     </div>
@@ -64,7 +64,7 @@ const items = [
     <div class="menu-dropdown">
       <a href={homeHref}>{locale === 'ja' ? 'この松井研究室について…' : 'About Matsui Lab…'}</a>
       <span class="menu-rule"></span>
-      <a href={site.socials.cv} target="_blank" rel="noopener noreferrer">Akira's CV</a>
+      <a href={site.socials.cv} target="_blank" rel="noopener noreferrer" data-cv-open>Akira's CV</a>
       <a href={kidPixHref} target="_blank" rel="noopener noreferrer" data-kidpix-open>{locale === 'ja' ? 'キッドピクスを開く' : 'Open Kid Pix'}</a>
       <span class="menu-rule"></span>
       <a href={modernHref}>{locale === 'ja' ? 'モダン版へ切り替え' : 'Switch to Modern Site'}</a>
