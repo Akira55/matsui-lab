@@ -15,7 +15,7 @@ const localePrefix = locale === 'ja' ? '/ja' : '';
 const otherLocalePrefix = locale === 'ja' ? '' : '/ja';
 const homeHref = u(`${localePrefix}/`);
 const otherHref = u(`${otherLocalePrefix}/`);
-const macintoshHref = locale === 'ja' ? '/matsui-lab/ja/' : '/matsui-lab/';
+const classicHref = locale === 'ja' ? '/matsui-lab/ja/' : '/matsui-lab/';
 
 const items = [
   { key: 'research', href: u(`${localePrefix}/research/`) },
@@ -54,10 +54,10 @@ const items = [
         </a>
       ))}
       <a
-        href={macintoshHref}
+        href={classicHref}
         class="ml-2 rounded-full border-2 border-pop-ink bg-pop-yellow px-3 py-1.5 font-display text-xs text-pop-ink shadow-sticker-sm transition-transform hover:-translate-y-0.5"
       >
-        {locale === 'ja' ? 'Macintosh版' : 'Macintosh'}
+        MatLab Classic
       </a>
       <a
         href={otherHref}
@@ -85,10 +85,10 @@ const items = [
           ))}
           <li>
             <a
-              href={macintoshHref}
+              href={classicHref}
               class="block rounded-xl border-2 border-pop-ink bg-pop-yellow px-3 py-2 font-display text-pop-ink shadow-sticker-sm"
             >
-              {locale === 'ja' ? 'Macintosh版へ切り替え' : 'Switch to Macintosh Site'}
+              {locale === 'ja' ? 'MatLab Classicへ切り替え' : 'Switch to MatLab Classic'}
             </a>
           </li>
           <li>
