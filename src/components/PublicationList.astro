@@ -1,6 +1,5 @@
 ---
 import { publications } from '../data/publications';
-import Sparkle from './Sparkle.astro';
 
 interface Props {
   limit?: number;
@@ -16,13 +15,6 @@ const years = Object.keys(grouped)
   .map(Number)
   .sort((a, b) => b - a);
 
-const typeChip: Record<string, string> = {
-  journal: 'bg-pop-blue-soft',
-  conference: 'bg-pop-cyan-soft',
-  preprint: 'bg-pop-yellow-soft',
-  chapter: 'bg-pop-purple-soft',
-  book: 'bg-pop-ink text-pop-paper',
-};
 ---
 
 <div class="space-y-10">
@@ -37,11 +29,11 @@ const typeChip: Record<string, string> = {
           <li class="sticker-sm p-4 transition-transform hover:-translate-y-0.5">
             <div class="flex flex-wrap items-center gap-2">
               {p.type && (
-                <span class:list={['chip', typeChip[p.type] || 'bg-pop-cyan-soft']}>{p.type}</span>
+                <span class:list={['publication-tag', `publication-tag-${p.type}`]}>{p.type}</span>
               )}
               {p.highlight && (
-                <span class="inline-flex items-center gap-1 rounded-full border-2 border-pop-ink bg-pop-yellow px-2 py-0.5 font-display text-[10px]">
-                  <Sparkle class="h-3 w-3" /> highlight
+                <span class="highlight-tag">
+                  ★ highlight
                 </span>
               )}
               {p.authors && <span class="text-xs text-pop-ink/60">{p.authors}</span>}

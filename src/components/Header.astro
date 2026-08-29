@@ -4,18 +4,13 @@ import { site } from '../data/site';
 import { nav, ui } from '../data/i18n';
 import { u } from '../lib/url';
 
-interface Props {
-  locale: Locale;
-  current?: string;
-}
-
-const { locale, current } = Astro.props;
-
+interface Props { locale: Locale; current?: string; }
+const { locale } = Astro.props;
 const localePrefix = locale === 'ja' ? '/ja' : '';
 const otherLocalePrefix = locale === 'ja' ? '' : '/ja';
 const homeHref = u(`${localePrefix}/`);
 const otherHref = u(`${otherLocalePrefix}/`);
-
+const modernHref = u(`/modern${localePrefix}/`);
 const items = [
   { key: 'research', href: u(`${localePrefix}/research/`) },
   { key: 'members', href: u(`${localePrefix}/members/`) },
@@ -27,65 +22,65 @@ const items = [
 ];
 ---
 
-<header class="sticky top-0 z-40 border-b-[3px] border-pop-ink bg-pop-paper/95 backdrop-blur">
-  <div class="container-page flex h-20 items-center justify-between">
-    <a href={homeHref} class="group flex items-center gap-3">
-      <span class="relative inline-flex h-9 items-center justify-center rounded-full border-[3px] border-pop-ink bg-pop-blue px-3.5 text-white shadow-sticker-sm transition-transform group-hover:rotate-[-3deg]">
-        <span class="font-display text-base leading-none tracking-wide">MatLab</span>
-      </span>
-      <span class="hidden font-display text-xl tracking-wide text-pop-ink sm:inline">
-        {site.labName[locale]}
-      </span>
-    </a>
-
-    <nav class="hidden items-center gap-1 md:flex">
-      {items.map((item) => (
-        <a
-          href={item.href}
-          class:list={[
-            'rounded-full px-3 py-1.5 font-display text-sm transition-all',
-            current === item.key
-              ? 'bg-pop-yellow text-pop-ink border-2 border-pop-ink shadow-sticker-sm'
-              : 'text-pop-ink hover:bg-pop-blue-soft hover:-translate-y-0.5 border-2 border-transparent',
-          ]}
-        >
-          {nav[locale][item.key]}
-        </a>
-      ))}
-      <a
-        href={otherHref}
-        class="ml-2 rounded-full border-2 border-pop-ink bg-pop-cyan px-3 py-1.5 font-display text-xs text-pop-ink shadow-sticker-sm transition-transform hover:-translate-y-0.5"
-      >
-        {ui[locale].languageLabel}
-      </a>
-    </nav>
-
-    <details class="md:hidden">
-      <summary class="cursor-pointer list-none rounded-full border-2 border-pop-ink bg-white p-2 shadow-sticker-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
-      </summary>
-      <div class="absolute left-0 right-0 top-20 border-b-[3px] border-pop-ink bg-pop-paper shadow-sticker">
-        <ul class="container-page flex flex-col gap-1 py-4">
-          {items.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class="block rounded-xl border-2 border-transparent px-3 py-2 font-display text-pop-ink hover:border-pop-ink hover:bg-pop-blue-soft"
-              >
-                {nav[locale][item.key]}
-              </a>
-            </li>
-          ))}
-          <li>
-            <a
-              href={otherHref}
-              class="block rounded-xl border-2 border-pop-ink bg-pop-cyan px-3 py-2 font-display text-pop-ink shadow-sticker-sm"
-            >
-              {ui[locale].languageLabel}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </details>
-  </div>
+<header class="system-menubar">
+  <a href={homeHref} class="system-mark" aria-label={site.labName[locale]}>◆</a>
+  <details class="site-menu">
+    <summary>{locale === 'ja' ? 'ファイル' : 'File'}</summary>
+    <div class="menu-dropdown">
+      <a href={homeHref}>{locale === 'ja' ? 'ホームフォルダを開く' : 'Open Home Folder'}</a>
+      <span class="menu-rule"></span>
+      {items.map((item) => <a href={item.href}>{nav[locale][item.key]}</a>)}
+    </div>
+  </details>
+  <details class="site-menu desktop-menu">
+    <summary>{locale === 'ja' ? '編集' : 'Edit'}</summary>
+    <div class="menu-dropdown menu-dropdown-narrow">
+      <span class="menu-disabled">{locale === 'ja' ? '取り消し' : 'Undo'}<kbd>⌘Z</kbd></span>
+      <span class="menu-rule"></span>
+      <span class="menu-disabled">{locale === 'ja' ? 'すべてを選択' : 'Select All'}<kbd>⌘A</kbd></span>
+    </div>
+  </details>
+  <details class="site-menu desktop-menu">
+    <summary>{locale === 'ja' ? '表示' : 'View'}</summary>
+    <div class="menu-dropdown menu-dropdown-narrow">
+      <a href={homeHref}><span class="menu-check">✓</span>{locale === 'ja' ? 'アイコン表示' : 'by Icon'}</a>
+      <a href={u(`${localePrefix}/news/`)}><span class="menu-check"></span>{locale === 'ja' ? '新しい順に表示' : 'by Date'}</a>
+    </div>
+  </details>
+  <details class="site-menu">
+    <summary>{locale === 'ja' ? '移動' : 'Go'}</summary>
+    <div class="menu-dropdown">
+      {items.slice(0, 5).map((item) => <a href={item.href}>{nav[locale][item.key]}</a>)}
+    </div>
+  </details>
+  <details class="site-menu desktop-menu">
+    <summary>{locale === 'ja' ? '特別' : 'Special'}</summary>
+    <div class="menu-dropdown">
+      <a href={homeHref}>{locale === 'ja' ? 'この松井研究室について…' : 'About Matsui Lab…'}</a>
+      <span class="menu-rule"></span>
+      <a href={site.socials.cv} target="_blank" rel="noopener noreferrer">Akira's CV</a>
+      <span class="menu-rule"></span>
+      <a href={modernHref}>{locale === 'ja' ? 'モダン版へ切り替え' : 'Switch to Modern Site'}</a>
+      <span class="menu-rule"></span>
+      {items.slice(5).map((item) => <a href={item.href}>{nav[locale][item.key]}</a>)}
+    </div>
+  </details>
+  <span class="menubar-spacer"></span>
+  <a href={modernHref} class="version-switch">{locale === 'ja' ? 'モダン版' : 'Modern'}</a>
+  <a href={otherHref} class="language-switch">{ui[locale].languageLabel}</a>
+  <span class="menubar-clock" data-mac-clock>--:--</span>
 </header>
+
+<script is:inline>
+  const clock = document.querySelector('[data-mac-clock]');
+  const tick = () => {
+    if (clock) clock.textContent = new Intl.DateTimeFormat(document.documentElement.lang, { hour: '2-digit', minute: '2-digit' }).format(new Date());
+  };
+  tick();
+  window.setInterval(tick, 30000);
+  document.addEventListener('click', (event) => {
+    document.querySelectorAll('.site-menu[open]').forEach((menu) => {
+      if (!menu.contains(event.target)) menu.removeAttribute('open');
+    });
+  });
+</script>

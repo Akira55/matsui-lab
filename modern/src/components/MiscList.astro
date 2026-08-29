@@ -1,0 +1,64 @@
+---
+import type { Locale } from '../data/site';
+import { misc } from '../data/misc';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const grouped = misc.reduce<Record<number, typeof misc>>((acc, m) => {
+  (acc[m.year] ||= []).push(m);
+  return acc;
+}, {});
+const years = Object.keys(grouped)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+const typeChip: Record<string, { label: Record<Locale, string>; bg: string }> = {
+  column: { label: { en: 'column', ja: 'コラム' }, bg: 'bg-pop-purple-soft' },
+  preprint: { label: { en: 'preprint', ja: 'プレプリント' }, bg: 'bg-pop-cyan-soft' },
+  'working-paper': { label: { en: 'WP', ja: 'WP' }, bg: 'bg-pop-blue-soft' },
+  report: { label: { en: 'report', ja: 'レポート' }, bg: 'bg-pop-yellow-soft' },
+};
+---
+
+<div class="space-y-10">
+  {years.map((year) => (
+    <section>
+      <div class="flex items-baseline gap-3">
+        <h3 class="font-display text-3xl text-pop-ink">{year}</h3>
+        <span class="h-[3px] flex-1 bg-pop-ink"></span>
+      </div>
+      <ol class="mt-5 space-y-3">
+        {grouped[year].map((m) => {
+          const t = typeChip[m.type];
+          return (
+            <li class="sticker-sm p-4 transition-transform hover:-translate-y-0.5">
+              <div class="flex flex-wrap items-center gap-2">
+                {t && <span class:list={['chip', t.bg]}>{t.label[locale]}</span>}
+                {m.authors && <span class="text-xs text-pop-ink/60">{m.authors}</span>}
+              </div>
+              <p class="mt-2 font-display text-base leading-snug text-pop-ink">
+                {m.url ? (
+                  <a
+                    href={m.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="decoration-pop-yellow decoration-2 underline-offset-4 hover:underline hover:text-pop-blue"
+                  >
+                    {m.title}
+                    <span aria-hidden="true" class="ml-1 text-pop-blue">↗</span>
+                  </a>
+                ) : (
+                  m.title
+                )}
+              </p>
+              {m.venue && <p class="mt-1 text-sm italic text-pop-ink/70">{m.venue}</p>}
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  ))}
+</div>

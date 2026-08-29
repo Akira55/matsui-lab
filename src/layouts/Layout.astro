@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import type { Locale } from '../data/site';
 import { site } from '../data/site';
+import { u } from '../lib/url';
 
 interface Props {
   locale: Locale;
@@ -14,9 +15,17 @@ interface Props {
 
 const { locale, title, description, current } = Astro.props;
 const fullTitle = `${title} · ${site.labName[locale]}`;
-
+const windowTitle = locale === 'ja' ? `松井研究室ディスク：${title}` : `Matsui Lab Disk: ${title}`;
 const gaId = site.gaMeasurementId;
 const enableGA = import.meta.env.PROD && !!gaId;
+const homeHref = u(locale === 'ja' ? '/ja/' : '/');
+const researchHref = u(locale === 'ja' ? '/ja/research/' : '/research/');
+const papersHref = u(locale === 'ja' ? '/ja/publications/' : '/publications/');
+const bootTitle = 'Welcome to Macintosh';
+const bootMessage = locale === 'ja' ? '起動ディスク “松井研究室 HD” を読み込んでいます…' : 'Loading startup disk “Matsui Lab HD”…';
+const bootSkip = locale === 'ja' ? 'スキップ' : 'Skip';
+const isMainPage = current === 'home';
+const siteBasePath = u('/');
 ---
 
 <!doctype html>
@@ -24,28 +33,27 @@ const enableGA = import.meta.env.PROD && !!gaId;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7d879f" />
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
     <meta property="og:title" content={fullTitle} />
     {description && <meta property="og:description" content={description} />}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Hachi+Maru+Pop&family=Yusei+Magic&family=Reggae+One&family=Bungee&family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Kosugi+Maru&family=Quicksand:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <!--
-      Hide the intro animation on repeat visits.
-      Runs synchronously before <body> renders so there is no flash.
-      Bump the storage key (e.g. v1 → v2) to make the intro replay for everyone.
-    -->
-    <script is:inline>
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL(u('/og.png'), Astro.site)} />
+    <script is:inline define:vars={{ isMainPage, siteBasePath }}>
       try {
-        if (localStorage.getItem('matlab-intro-played-v1') === 'true') {
-          document.documentElement.classList.add('no-intro');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let cameFromThisSite = false;
+        if (document.referrer) {
+          const previousPage = new URL(document.referrer);
+          cameFromThisSite = previousPage.origin === window.location.origin
+            && previousPage.pathname.startsWith(siteBasePath);
         }
-      } catch (e) {
-        /* localStorage may be unavailable (private mode) — show intro by default */
+        if (!reduceMotion && isMainPage && !cameFromThisSite) {
+          document.documentElement.classList.add('boot-required');
+        }
+      } catch (error) {
+        /* Continue without the startup screen if the referrer cannot be read. */
       }
     </script>
     {enableGA && (
@@ -60,12 +68,116 @@ const enableGA = import.meta.env.PROD && !!gaId;
       </>
     )}
   </head>
-  <body class="flex min-h-screen flex-col">
+  <body>
+    <div class="boot-screen" data-boot-screen role="status" aria-live="polite">
+      <div class="boot-dialog">
+        <div class="boot-mac" aria-hidden="true"><span></span></div>
+        <strong>{bootTitle}</strong>
+        <p data-boot-message>{bootMessage}</p>
+        <div class="boot-progress" aria-hidden="true"><span></span></div>
+        <button type="button" data-boot-skip>{bootSkip}</button>
+      </div>
+    </div>
     <a href="#main" class="sr-only focus:not-sr-only">Skip to content</a>
     <Header locale={locale} current={current} />
-    <main id="main" class="flex-1">
-      <slot />
-    </main>
-    <Footer locale={locale} />
+    <div class="mac-desktop">
+      <button class="desktop-reopen" type="button" data-reopen-window aria-label={locale === 'ja' ? '松井研究室ディスクを開く' : 'Open Matsui Lab Disk'}>
+        <span class="mac-icon hard-drive-icon" aria-hidden="true"></span>
+        <span>{locale === 'ja' ? '松井研究室 HD' : 'Matsui Lab HD'}</span>
+      </button>
+      <aside class="desktop-icons" aria-label={locale === 'ja' ? 'デスクトップ' : 'Desktop'}>
+        <a href={researchHref} class="desktop-icon"><span class="mac-icon disk-icon" aria-hidden="true"></span><span>{locale === 'ja' ? '研究フォルダ' : 'Research Folder'}</span></a>
+        <a href={papersHref} class="desktop-icon"><span class="mac-icon folder-icon" aria-hidden="true"></span><span>{locale === 'ja' ? '論文フォルダ' : 'Papers Folder'}</span></a>
+        <a href={site.socials.cv} target="_blank" rel="noopener noreferrer" class="desktop-icon"><span class="mac-icon document-icon" aria-hidden="true"><span>CV</span></span><span>Akira's CV</span></a>
+      </aside>
+      <div class="mac-window" data-mac-window>
+        <div class="mac-titlebar" data-window-handle>
+          <button class="close-box" type="button" data-close-window aria-label={locale === 'ja' ? 'ウィンドウを閉じる' : 'Close window'}></button>
+          <span>{windowTitle}</span>
+          <button class="zoom-box" type="button" data-zoom-window aria-label={locale === 'ja' ? 'ウィンドウを拡大・縮小する' : 'Zoom window'}></button>
+        </div>
+        <main id="main"><slot /></main>
+        <Footer locale={locale} />
+      </div>
+    </div>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const body = document.body;
+        const boot = document.querySelector('[data-boot-screen]');
+        const bootSkip = document.querySelector('[data-boot-skip]');
+        const macWindow = document.querySelector('[data-mac-window]');
+        const closeButton = document.querySelector('[data-close-window]');
+        const reopenButton = document.querySelector('[data-reopen-window]');
+        const zoomButton = document.querySelector('[data-zoom-window]');
+        const handle = document.querySelector('[data-window-handle]');
+
+        const finishBoot = () => {
+          if (!root.classList.contains('boot-required')) return;
+          root.classList.add('boot-finishing');
+          window.setTimeout(() => {
+            root.classList.remove('boot-required', 'boot-finishing');
+          }, 320);
+        };
+
+        if (root.classList.contains('boot-required')) {
+          const bootMessage = document.querySelector('[data-boot-message]');
+          const messages = document.documentElement.lang === 'ja'
+            ? ['システム機能拡張を読み込んでいます…', '松井研究室デスクトップを準備しています…']
+            : ['Loading system extensions…', 'Preparing the Matsui Lab desktop…'];
+          window.setTimeout(() => { if (bootMessage) bootMessage.textContent = messages[0]; }, 820);
+          window.setTimeout(() => { if (bootMessage) bootMessage.textContent = messages[1]; }, 1650);
+          window.setTimeout(finishBoot, 2700);
+          bootSkip?.addEventListener('click', finishBoot);
+        }
+
+        closeButton?.addEventListener('click', () => {
+          macWindow?.classList.add('is-closing');
+          window.setTimeout(() => {
+            body.classList.add('is-window-closed');
+            macWindow?.classList.remove('is-closing');
+            reopenButton?.focus();
+          }, 210);
+        });
+
+        const reopenWindow = () => {
+          body.classList.remove('is-window-closed');
+          macWindow?.classList.add('is-reopening');
+          window.setTimeout(() => macWindow?.classList.remove('is-reopening'), 260);
+          closeButton?.focus();
+        };
+        reopenButton?.addEventListener('click', reopenWindow);
+        reopenButton?.addEventListener('dblclick', reopenWindow);
+
+        zoomButton?.addEventListener('click', () => {
+          const expanded = body.classList.toggle('is-window-zoomed');
+          zoomButton.setAttribute('aria-pressed', String(expanded));
+          macWindow?.style.removeProperty('--drag-x');
+          macWindow?.style.removeProperty('--drag-y');
+        });
+
+        let drag = null;
+        handle?.addEventListener('pointerdown', (event) => {
+          if (event.target.closest('button') || window.innerWidth < 900 || body.classList.contains('is-window-zoomed')) return;
+          drag = { id: event.pointerId, startX: event.clientX, startY: event.clientY, x: 0, y: 0 };
+          handle.setPointerCapture(event.pointerId);
+          macWindow?.classList.add('is-dragging');
+        });
+        handle?.addEventListener('pointermove', (event) => {
+          if (!drag || drag.id !== event.pointerId || !macWindow) return;
+          drag.x = Math.max(-150, Math.min(150, event.clientX - drag.startX));
+          drag.y = Math.max(-35, Math.min(90, event.clientY - drag.startY));
+          macWindow.style.setProperty('--drag-x', `${drag.x}px`);
+          macWindow.style.setProperty('--drag-y', `${drag.y}px`);
+        });
+        const stopDrag = (event) => {
+          if (!drag || drag.id !== event.pointerId) return;
+          drag = null;
+          macWindow?.classList.remove('is-dragging');
+        };
+        handle?.addEventListener('pointerup', stopDrag);
+        handle?.addEventListener('pointercancel', stopDrag);
+      })();
+    </script>
   </body>
 </html>

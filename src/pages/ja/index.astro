@@ -3,9 +3,6 @@ import Layout from '../../layouts/Layout.astro';
 import Hero from '../../components/Hero.astro';
 import FeedList from '../../components/FeedList.astro';
 import PublicationList from '../../components/PublicationList.astro';
-import Sparkle from '../../components/Sparkle.astro';
-import IntroAnimation from '../../components/IntroAnimation.astro';
-import Stardust from '../../components/Stardust.astro';
 import { ui } from '../../data/i18n';
 import { u } from '../../lib/url';
 ---
@@ -16,19 +13,17 @@ import { u } from '../../lib/url';
   title="ホーム"
   description="松井研究室 — 神戸大学 計算社会科学研究センター"
 >
-  <IntroAnimation locale="ja" />
-  <Stardust />
   <Hero locale="ja" />
 
   <section class="container-page section">
     <div class="grid gap-10 md:grid-cols-3">
       <div>
-        <p class="heading-eyebrow">News</p>
+        <p class="heading-eyebrow">松井研究室ディスク</p>
         <h2 class="mt-4 font-display text-4xl leading-tight">
-          <span class="bg-pop-yellow px-2 -rotate-2 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker-sm">新着</span>のお知らせ
+          <span class="bg-pop-yellow px-2 inline-block border-[3px] border-pop-ink">最近使った項目</span>
         </h2>
         <p class="mt-3 text-sm text-pop-ink/70">
-          論文・講演・コラム・受賞などをまとめて新しい順に。
+          新しく追加された書類を、日付の新しい順に表示しています。
         </p>
       </div>
       <div class="md:col-span-2">
@@ -38,7 +33,7 @@ import { u } from '../../lib/url';
             href={u('/ja/news/')}
             class="inline-flex items-center gap-2 rounded-full border-[3px] border-pop-ink bg-pop-blue px-5 py-2.5 font-display text-white shadow-sticker transition-transform hover:-translate-y-0.5"
           >
-            {ui.ja.showMore} <Sparkle class="h-4 w-4" />
+            {ui.ja.showMore}
           </a>
         </div>
       </div>
@@ -49,9 +44,9 @@ import { u } from '../../lib/url';
     <div class="container-page section">
       <div class="grid gap-10 md:grid-cols-3">
         <div>
-          <p class="heading-eyebrow">Papers</p>
+          <p class="heading-eyebrow">論文フォルダ</p>
           <h2 class="mt-4 font-display text-4xl leading-tight">
-            主な<span class="bg-pop-blue text-white px-2 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker-sm">論文</span>
+            主な<span class="bg-pop-blue text-white px-2 inline-block border-[3px] border-pop-ink">論文書類</span>
           </h2>
           <a href={u('/ja/publications/')} class="mt-5 inline-flex items-center gap-1 font-display text-pop-blue hover:underline">
             {ui.ja.seePublications} →

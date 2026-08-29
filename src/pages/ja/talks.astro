@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import TalksList from '../../components/TalksList.astro';
-import Sparkle from '../../components/Sparkle.astro';
 import { site } from '../../data/site';
 import { talks } from '../../data/talks';
 
@@ -15,13 +14,13 @@ const invitedCount = talks.filter((t) => t.type === 'invited').length;
   description="松井研究室の講演・口頭発表一覧"
 >
   <section class="container-page section">
-    <p class="heading-eyebrow">Talks</p>
+    <p class="heading-eyebrow">講演フォルダ</p>
     <h1 class="heading-display mt-4">
-      <span class="bg-pop-cyan text-pop-ink px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">講演</span>・口頭発表
-      &nbsp;<Sparkle class="h-7 w-7 inline-block align-baseline" />
+      <span class="bg-pop-cyan text-pop-ink px-2 inline-block border-[3px] border-pop-ink">講演</span>・口頭発表の書類
+      <span class="mac-heading-glyph" aria-hidden="true">✦</span>
     </h1>
     <p class="mt-6 max-w-2xl text-pop-ink/80">
-      国内外の招待講演・口頭発表（{talks.length}件、招待{invitedCount}件）。完全な一覧は
+      このフォルダには、国内外の招待講演・口頭発表を{talks.length}件（うち招待{invitedCount}件）収録しています。完全な一覧は
       <a class="link" href={site.socials.researchmap}>researchmap</a>
       をご参照ください。
     </p>

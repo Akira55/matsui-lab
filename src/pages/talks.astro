@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import TalksList from '../components/TalksList.astro';
-import Sparkle from '../components/Sparkle.astro';
 import { site } from '../data/site';
 import { talks } from '../data/talks';
 
@@ -15,13 +14,13 @@ const invitedCount = talks.filter((t) => t.type === 'invited').length;
   description="Invited and contributed talks at Matsui Lab"
 >
   <section class="container-page section">
-    <p class="heading-eyebrow">Talks</p>
+    <p class="heading-eyebrow">Talks Folder</p>
     <h1 class="heading-display mt-4">
-      <span class="bg-pop-cyan text-pop-ink px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">Talks</span>
-      &nbsp;<Sparkle class="h-7 w-7 inline-block align-baseline" />
+      Documents in the <span class="bg-pop-cyan text-pop-ink px-2 inline-block border-[3px] border-pop-ink">Talks Folder</span>
+      <span class="mac-heading-glyph" aria-hidden="true">✦</span>
     </h1>
     <p class="mt-6 max-w-2xl text-pop-ink/80">
-      Invited and contributed talks at international and domestic venues
+      This folder contains invited and contributed talks at international and domestic venues
       ({talks.length} entries, {invitedCount} invited). Full list maintained on
       <a class="link" href={site.socials.researchmap}>researchmap</a>.
     </p>

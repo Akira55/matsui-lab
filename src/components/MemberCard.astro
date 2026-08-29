@@ -10,8 +10,8 @@ const { member, locale } = Astro.props;
 ---
 
 <article class="sticker relative p-6 transition-transform hover:-translate-y-1 hover:rotate-[-0.6deg]">
-  <span aria-hidden="true" class="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border-[3px] border-pop-ink bg-pop-yellow text-lg shadow-sticker-sm">
-    {member.emoji ?? '★'}
+  <span aria-hidden="true" class="member-corner-icon">
+    ◆
   </span>
   <div class="flex items-start gap-4">
     <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border-[3px] border-pop-ink bg-pop-blue-soft font-display text-2xl text-pop-ink shadow-sticker-sm">

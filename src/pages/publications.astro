@@ -5,7 +5,6 @@ import { site } from '../data/site';
 import { awards, grants } from '../data/awards';
 import { service } from '../data/service';
 import { books } from '../data/publications';
-import Sparkle from '../components/Sparkle.astro';
 import ProfileLinks from '../components/ProfileLinks.astro';
 import { u } from '../lib/url';
 
@@ -20,13 +19,13 @@ const sections = [
 
 <Layout locale="en" current="publications" title="Publications">
   <section class="container-page section">
-    <p class="heading-eyebrow">Publications</p>
+    <p class="heading-eyebrow">Publications Folder</p>
     <h1 class="heading-display mt-4">
-      <span class="bg-pop-yellow text-pop-ink px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">Papers</span>,
+      <span class="bg-pop-yellow text-pop-ink px-2 inline-block border-[3px] border-pop-ink">Papers</span>,
       books, awards & grants
     </h1>
     <p class="mt-6 max-w-2xl text-pop-ink/80">
-      Peer-reviewed papers, books, awards, and grants. For talks see
+      This folder contains peer-reviewed papers, books, awards, and grants. For talks, open
       <a class="link" href={u('/talks/')}>Talks</a>;
       for columns, preprints, and working papers see
       <a class="link" href={u('/misc/')}>MISC</a>.
@@ -88,7 +87,7 @@ const sections = [
 
     <section id="awards" class="mt-16 scroll-mt-24">
       <div class="flex items-baseline gap-3">
-        <h2 class="font-display text-3xl">Awards <Sparkle class="h-6 w-6 align-baseline" /></h2>
+        <h2 class="font-display text-3xl">Awards <span class="mac-heading-glyph" aria-hidden="true">✦</span></h2>
         <span class="h-[3px] flex-1 bg-pop-ink"></span>
       </div>
       <ul class="mt-5 grid gap-3">

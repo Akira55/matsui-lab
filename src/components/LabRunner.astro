@@ -1,0 +1,377 @@
+---
+import type { Locale } from '../data/site';
+
+interface Props {
+  locale: Locale;
+  characterSrc: string;
+}
+
+const { locale, characterSrc } = Astro.props;
+const copy = locale === 'ja'
+  ? {
+      open: 'キャラクターをクリックしてミニゲームを開く',
+      hint: 'クリックして遊ぶ',
+      title: '松井研究室ランナー',
+      score: 'スコア',
+      high: 'ベスト',
+      ready: 'Space・↑・クリックでジャンプ',
+      start: 'キーを押してスタート',
+      over: 'ゲームオーバー',
+      retry: 'もう一度',
+      close: '終了',
+      closeLabel: 'ゲームを閉じる',
+    }
+  : {
+      open: 'Click the character to open the mini game',
+      hint: 'Click to play',
+      title: 'Matsui Lab Runner',
+      score: 'Score',
+      high: 'Best',
+      ready: 'Space, ↑, or click to jump',
+      start: 'Press to start',
+      over: 'Game Over',
+      retry: 'Try Again',
+      close: 'Quit',
+      closeLabel: 'Close game',
+    };
+---
+
+<button class="character-game-launcher" type="button" data-game-open aria-label={copy.open}>
+  <img class="pixel-character" src={characterSrc} alt="" />
+  <span>{copy.hint} <b aria-hidden="true">▶</b></span>
+</button>
+
+<dialog class="runner-dialog" data-runner-dialog data-runner-src={characterSrc} aria-labelledby="runner-title">
+  <div class="runner-window">
+    <div class="runner-titlebar">
+      <button type="button" class="runner-close-box" data-game-close aria-label={copy.closeLabel}></button>
+      <strong id="runner-title">{copy.title}</strong>
+      <span class="runner-zoom-box" aria-hidden="true"></span>
+    </div>
+    <div class="runner-toolbar" aria-live="polite">
+      <span>{copy.score}: <b data-game-score>00000</b></span>
+      <span>{copy.high}: <b data-game-high>00000</b></span>
+    </div>
+    <canvas
+      class="runner-canvas"
+      data-runner-canvas
+      width="720"
+      height="260"
+      tabindex="0"
+      aria-label={`${copy.title}。${copy.ready}`}
+    ></canvas>
+    <div class="runner-controls">
+      <span><kbd>SPACE</kbd> / <kbd>↑</kbd> / <span class="mouse-symbol" aria-hidden="true">▣</span> {copy.ready}</span>
+      <div>
+        <button type="button" class="mac-button runner-retry" data-game-retry>{copy.retry}</button>
+        <button type="button" class="default-button" data-game-close>{copy.close}</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-runner-dialog]');
+  const openButton = document.querySelector<HTMLButtonElement>('[data-game-open]');
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-runner-canvas]');
+
+  if (dialog && openButton && canvas) {
+    const context = canvas.getContext('2d');
+    const scoreOutput = dialog.querySelector<HTMLElement>('[data-game-score]');
+    const highOutput = dialog.querySelector<HTMLElement>('[data-game-high]');
+    const retryButton = dialog.querySelector<HTMLButtonElement>('[data-game-retry]');
+    const closeButtons = dialog.querySelectorAll<HTMLButtonElement>('[data-game-close]');
+    const locale = document.documentElement.lang;
+    const words = locale === 'ja'
+      ? { ready: 'キーを押してスタート', over: 'ゲームオーバー', again: 'Space またはクリックでもう一度' }
+      : { ready: 'Press to start', over: 'Game Over', again: 'Press Space or click to try again' };
+    const runnerImage = new Image();
+    runnerImage.src = dialog.dataset.runnerSrc || '';
+    const width = canvas.width;
+    const height = canvas.height;
+    const ground = 207;
+    const runner = { x: 72, y: ground - 62, width: 48, height: 62, velocity: 0 };
+    let obstacles: Array<{ x: number; width: number; height: number; kind: number }> = [];
+    let frame = 0;
+    let previous = 0;
+    let spawnIn = 1000;
+    let score = 0;
+    let high = 0;
+    let mode: 'ready' | 'playing' | 'over' = 'ready';
+
+    try { high = Number(localStorage.getItem('matsui-lab-runner-high') || 0); } catch (_) {}
+
+    // A shifted Gamma(k=3) interval feels less mechanical than a uniform roll:
+    // short gaps are possible, long rests occasionally occur, and impossible
+    // rapid-fire sequences are prevented by the reaction-time floor.
+    const nextSpawnDelay = () => {
+      const difficulty = Math.min(1, score / 420);
+      const minimumGap = 760 - difficulty * 150;
+      const scale = 170 - difficulty * 35;
+      const product = Math.max(0.000001, Math.random() * Math.random() * Math.random());
+      const gammaSample = -Math.log(product) * scale;
+      return Math.min(2200, minimumGap + gammaSample);
+    };
+
+    const formatScore = (value: number) => String(Math.floor(value)).padStart(5, '0');
+    const updateScores = () => {
+      if (scoreOutput) scoreOutput.textContent = formatScore(score);
+      if (highOutput) highOutput.textContent = formatScore(high);
+    };
+
+    const reset = () => {
+      obstacles = [];
+      runner.y = ground - runner.height;
+      runner.velocity = 0;
+      score = 0;
+      spawnIn = nextSpawnDelay();
+      mode = 'ready';
+      previous = 0;
+      updateScores();
+      draw();
+    };
+
+    const startOrJump = () => {
+      if (mode === 'over') reset();
+      if (mode === 'ready') mode = 'playing';
+      if (runner.y >= ground - runner.height - 1) runner.velocity = -12.8;
+    };
+
+    const drawFolder = (x: number, y: number, w: number, h: number) => {
+      if (!context) return;
+      context.fillStyle = '#151515';
+      context.fillRect(x - 2, y + 7, w + 4, h - 5);
+      context.fillRect(x + 2, y, w * .55, 10);
+      context.fillStyle = '#d1a83e';
+      context.fillRect(x, y + 9, w, h - 9);
+      context.fillStyle = '#efd06b';
+      context.fillRect(x + 3, y + 3, w * .5, 7);
+      context.fillStyle = '#8d6b20';
+      context.fillRect(x + 4, y + h - 6, w - 8, 3);
+    };
+
+    const drawPaper = (x: number, y: number, w: number, h: number) => {
+      if (!context) return;
+      context.fillStyle = '#151515';
+      context.fillRect(x - 2, y - 2, w + 4, h + 4);
+      context.fillStyle = '#fff';
+      context.fillRect(x, y, w, h);
+      context.fillStyle = '#1d3f78';
+      context.fillRect(x + 5, y + 6, w - 10, 4);
+      context.fillStyle = '#777';
+      for (let line = 0; line < 3; line += 1) context.fillRect(x + 5, y + 16 + line * 7, w - 10, 2);
+    };
+
+    const drawRunner = () => {
+      if (!context) return;
+      if (runnerImage.complete && runnerImage.naturalWidth) {
+        context.save();
+        const drawX = runner.x - 12;
+        const drawY = runner.y - 7;
+        const drawWidth = runner.width + 25;
+        const drawHeight = runner.height + 10;
+        const runningBob = mode === 'playing' && runner.y >= ground - runner.height - 1 && Math.floor(score / 6) % 2 ? 2 : 0;
+        // The source mascot looks left; mirror only the in-game sprite so it
+        // faces the direction in which the course is moving.
+        context.translate(drawX + drawWidth, runningBob);
+        context.scale(-1, 1);
+        context.drawImage(runnerImage, 0, drawY, drawWidth, drawHeight);
+        context.restore();
+      } else {
+        context.fillStyle = '#1d3f78';
+        context.fillRect(runner.x, runner.y, runner.width, runner.height);
+      }
+    };
+
+    const draw = () => {
+      if (!context) return;
+      context.imageSmoothingEnabled = false;
+      context.fillStyle = '#f7f6ef';
+      context.fillRect(0, 0, width, height);
+      context.fillStyle = '#d6d5ce';
+      for (let x = 15; x < width; x += 53) context.fillRect(x, 36 + ((x / 53) % 3) * 17, 2, 2);
+      context.fillStyle = '#151515';
+      context.fillRect(0, ground, width, 3);
+      context.fillStyle = '#777';
+      for (let x = -(score * 4) % 32; x < width; x += 32) context.fillRect(x, ground + 9, 15, 2);
+      obstacles.forEach((obstacle) => {
+        const y = ground - obstacle.height;
+        if (obstacle.kind === 0) drawFolder(obstacle.x, y, obstacle.width, obstacle.height);
+        else drawPaper(obstacle.x, y, obstacle.width, obstacle.height);
+      });
+      drawRunner();
+
+      if (mode !== 'playing') {
+        context.fillStyle = 'rgba(247,246,239,.92)';
+        context.fillRect(175, 72, 370, 92);
+        context.strokeStyle = '#151515';
+        context.lineWidth = 3;
+        context.strokeRect(175, 72, 370, 92);
+        context.fillStyle = '#151515';
+        context.textAlign = 'center';
+        context.font = 'bold 22px Geneva, sans-serif';
+        context.fillText(mode === 'over' ? words.over : words.ready, width / 2, 110);
+        context.font = '14px Geneva, sans-serif';
+        context.fillText(mode === 'over' ? words.again : 'SPACE  ·  ↑  ·  CLICK', width / 2, 140);
+      }
+    };
+
+    const collide = (obstacle: { x: number; width: number; height: number }) => {
+      const paddingX = 11;
+      const paddingTop = 9;
+      return runner.x + runner.width - paddingX > obstacle.x + 3
+        && runner.x + paddingX < obstacle.x + obstacle.width - 3
+        && runner.y + runner.height - 5 > ground - obstacle.height + 4
+        && runner.y + paddingTop < ground;
+    };
+
+    const loop = (time: number) => {
+      if (!dialog.open) return;
+      const elapsed = previous ? Math.min(34, time - previous) : 16.67;
+      previous = time;
+      if (mode === 'playing') {
+        const step = elapsed / 16.67;
+        const speed = Math.min(11, 5.5 + score / 260);
+        runner.velocity += .72 * step;
+        runner.y = Math.min(ground - runner.height, runner.y + runner.velocity * step);
+        spawnIn -= elapsed;
+        if (spawnIn <= 0) {
+          const kind = Math.random() > .52 ? 1 : 0;
+          obstacles.push({ x: width + 20, width: kind ? 31 : 42, height: kind ? 47 : 35, kind });
+          spawnIn = nextSpawnDelay();
+        }
+        obstacles.forEach((obstacle) => { obstacle.x -= speed * step; });
+        obstacles = obstacles.filter((obstacle) => obstacle.x + obstacle.width > -10);
+        score += elapsed / 92;
+        if (obstacles.some(collide)) {
+          mode = 'over';
+          high = Math.max(high, Math.floor(score));
+          try { localStorage.setItem('matsui-lab-runner-high', String(high)); } catch (_) {}
+        }
+        updateScores();
+      }
+      draw();
+      frame = requestAnimationFrame(loop);
+    };
+
+    const openGame = () => {
+      reset();
+      dialog.showModal();
+      canvas.focus();
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(loop);
+    };
+    const closeGame = () => {
+      cancelAnimationFrame(frame);
+      dialog.close();
+      openButton.focus();
+    };
+
+    openButton.addEventListener('click', openGame);
+    closeButtons.forEach((button) => button.addEventListener('click', closeGame));
+    retryButton?.addEventListener('click', () => { reset(); startOrJump(); canvas.focus(); });
+    canvas.addEventListener('pointerdown', (event) => { event.preventDefault(); startOrJump(); });
+    dialog.addEventListener('cancel', (event) => { event.preventDefault(); closeGame(); });
+    document.addEventListener('keydown', (event) => {
+      if (!dialog.open || !['Space', 'ArrowUp'].includes(event.code)) return;
+      event.preventDefault();
+      startOrJump();
+    });
+    runnerImage.addEventListener('load', draw);
+    updateScores();
+    draw();
+  }
+</script>
+
+<style>
+  .character-game-launcher {
+    display: grid;
+    justify-items: center;
+    width: 100%;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+  .character-game-launcher .pixel-character { transition: filter .12s steps(2, end); }
+  .character-game-launcher:hover .pixel-character,
+  .character-game-launcher:focus-visible .pixel-character { filter: drop-shadow(5px 6px 0 rgba(0,0,0,.28)) brightness(1.08); }
+  .character-game-launcher:active .pixel-character { transform: translateY(4px); animation: none; }
+  .character-game-launcher > span {
+    margin-top: 8px;
+    padding: 4px 8px;
+    color: #fff;
+    background: #1d3f78;
+    border: 1px solid #151515;
+    box-shadow: inset 1px 1px rgba(255,255,255,.65), 2px 2px #777;
+    font: 700 11px Chicago, Charcoal, Geneva, Osaka, sans-serif;
+  }
+  .character-game-launcher > span b { color: #efd06b; }
+
+  .runner-dialog {
+    width: min(790px, calc(100vw - 22px));
+    max-width: none;
+    padding: 0;
+    overflow: visible;
+    color: #151515;
+    background: #d6d5ce;
+    border: 2px solid #151515;
+    box-shadow: 9px 9px 0 rgba(0,0,0,.5);
+  }
+  .runner-dialog::backdrop {
+    background-color: rgba(72,80,100,.72);
+    background-image: radial-gradient(rgba(255,255,255,.2) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+  .runner-window { border: 2px solid #fff; }
+  .runner-titlebar {
+    position: relative;
+    height: 29px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: repeating-linear-gradient(to bottom, #fff 0, #fff 1px, #111 1px, #111 2px, #fff 2px, #fff 4px);
+    border-bottom: 2px solid #151515;
+    font: 700 13px Chicago, Charcoal, Geneva, Osaka, sans-serif;
+  }
+  .runner-titlebar strong { padding: 2px 13px; background: #fff; }
+  .runner-close-box,
+  .runner-zoom-box { position: absolute; top: 4px; width: 18px; height: 18px; background: #fff; border: 2px solid #151515; }
+  .runner-close-box { left: 7px; padding: 0; cursor: pointer; }
+  .runner-close-box:hover, .runner-close-box:active { background: #151515; box-shadow: inset 0 0 0 2px #fff; }
+  .runner-zoom-box { right: 7px; box-shadow: inset -3px -3px #fff, inset -5px -5px #151515; }
+  .runner-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 25px;
+    padding: 7px 14px 5px;
+    background: #d6d5ce;
+    border-bottom: 2px solid #151515;
+    font: 700 12px Chicago, Charcoal, Geneva, Osaka, sans-serif;
+  }
+  .runner-toolbar b { display: inline-block; min-width: 43px; font-variant-numeric: tabular-nums; }
+  .runner-canvas { display: block; width: 100%; height: auto; background: #f7f6ef; cursor: pointer; image-rendering: pixelated; touch-action: manipulation; }
+  .runner-controls {
+    min-height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 10px 12px;
+    background: #d6d5ce;
+    border-top: 2px solid #151515;
+    font-size: 12px;
+  }
+  .runner-controls > div { display: flex; gap: 8px; }
+  .runner-controls button { min-width: 86px; font-size: 12px; }
+  .runner-controls kbd { padding: 2px 5px; background: #fff; border: 1px solid #151515; box-shadow: 1px 1px #777; font: inherit; }
+  .mouse-symbol { display: inline-block; padding: 0 4px; background: #fff; border: 1px solid #151515; }
+
+  @media (max-width: 600px) {
+    .runner-controls { align-items: stretch; flex-direction: column; }
+    .runner-controls > span { text-align: center; }
+    .runner-controls > div { justify-content: center; }
+    .runner-toolbar { justify-content: center; }
+  }
+</style>

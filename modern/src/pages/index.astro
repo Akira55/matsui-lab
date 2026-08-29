@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import FeedList from '../components/FeedList.astro';
+import PublicationList from '../components/PublicationList.astro';
+import Sparkle from '../components/Sparkle.astro';
+import IntroAnimation from '../components/IntroAnimation.astro';
+import Stardust from '../components/Stardust.astro';
+import { ui } from '../data/i18n';
+import { u } from '../lib/url';
+---
+
+<Layout
+  locale="en"
+  current="home"
+  title="Home"
+  description="Matsui Lab — Computational Social Science & Web Information Studies at Kobe University"
+>
+  <IntroAnimation locale="en" />
+  <Stardust />
+  <Hero locale="en" />
+
+  <section class="container-page section">
+    <div class="grid gap-10 md:grid-cols-3">
+      <div>
+        <p class="heading-eyebrow">News</p>
+        <h2 class="mt-4 font-display text-4xl leading-tight">
+          What's <span class="bg-pop-yellow px-2 -rotate-2 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker-sm">new</span>
+        </h2>
+        <p class="mt-3 text-sm text-pop-ink/70">
+          Papers, talks, columns, awards and more — newest first.
+        </p>
+      </div>
+      <div class="md:col-span-2">
+        <FeedList locale="en" limit={5} />
+        <div class="mt-6">
+          <a
+            href={u('/news/')}
+            class="inline-flex items-center gap-2 rounded-full border-[3px] border-pop-ink bg-pop-blue px-5 py-2.5 font-display text-white shadow-sticker transition-transform hover:-translate-y-0.5"
+          >
+            {ui.en.showMore} <Sparkle class="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y-[3px] border-pop-ink bg-pop-cyan-soft">
+    <div class="container-page section">
+      <div class="grid gap-10 md:grid-cols-3">
+        <div>
+          <p class="heading-eyebrow">Papers</p>
+          <h2 class="mt-4 font-display text-4xl leading-tight">
+            Selected <span class="bg-pop-blue text-white px-2 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker-sm">papers</span>
+          </h2>
+          <a href={u('/publications/')} class="mt-5 inline-flex items-center gap-1 font-display text-pop-blue hover:underline">
+            {ui.en.seePublications} →
+          </a>
+        </div>
+        <div class="md:col-span-2">
+          <PublicationList limit={5} />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -3,7 +3,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  // Deployed at https://akira55.github.io/matsui-lab/ (project page).
+  // Macintosh is the primary design at the project-page root.
   // All internal links use the `u()` helper in src/lib/url.ts so they pick up the base.
   site: 'https://akira55.github.io',
   base: '/matsui-lab',

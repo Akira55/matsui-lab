@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "npm run sync:modern-data && astro build && astro build --config modern/astro.config.mjs",
+    "sync:modern-data": "node scripts/sync-modern-data.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

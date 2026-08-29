@@ -1,31 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Sparkle from '../components/Sparkle.astro';
 
 const themes = [
   {
-    emoji: '🌐',
+    emoji: '⌘',
     color: 'bg-pop-blue-soft',
     title: 'Platforms & user behavior',
     body:
       'How do design, recommendation, and incentives shape what we read, watch, and share? We combine behavioral logs with quasi-experimental designs to disentangle attention, selection, and treatment.',
   },
   {
-    emoji: '📚',
+    emoji: '▤',
     color: 'bg-pop-cyan-soft',
     title: 'Wikipedia & knowledge at scale',
     body:
       'From Wikipedia editing to academic publishing, we study how distributed communities cooperatively create knowledge — and where systematic gaps emerge (e.g., urban–rural disparities in coverage).',
   },
   {
-    emoji: '💬',
+    emoji: 'A',
     color: 'bg-pop-yellow-soft',
     title: 'Text, language & embeddings',
     body:
       'Word embeddings, topic models, and large language models as instruments for measuring social and economic constructs — including monetary policy, political communication, and ideology.',
   },
   {
-    emoji: '⚠️',
+    emoji: '!',
     color: 'bg-pop-purple-soft',
     title: 'Harmful & toxic behavior',
     body:
@@ -36,13 +35,13 @@ const themes = [
 
 <Layout locale="en" current="research" title="Research" description="Research themes pursued at Matsui Lab">
   <section class="container-page section">
-    <p class="heading-eyebrow">Research</p>
+    <p class="heading-eyebrow">Research Folder</p>
     <h1 class="heading-display mt-4">
-      What we <span class="bg-pop-blue text-white px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">study</span>
-      <Sparkle class="h-8 w-8 align-baseline animate-sparkle" />
+      Contents of the <span class="bg-pop-blue text-white px-2 inline-block border-[3px] border-pop-ink">Research Folder</span>
+      <span class="mac-heading-glyph" aria-hidden="true">✦</span>
     </h1>
     <p class="mt-6 max-w-3xl text-lg text-pop-ink/80">
-      Matsui Lab works at the intersection of <strong>computational social science</strong> and
+      This folder contains the principal research themes of Matsui Lab. We work at the intersection of <strong>computational social science</strong> and
       <strong>web information studies</strong>. We use digital trace data, statistical inference, and
       machine learning to ask social-scientific questions about behavior, communication, and
       knowledge.
@@ -54,7 +53,7 @@ const themes = [
       <div class="grid gap-8 md:grid-cols-2">
         {themes.map((t) => (
           <article class:list={['sticker p-7 transition-transform hover:-translate-y-1', t.color]}>
-            <div class="text-3xl">{t.emoji}</div>
+            <div class="research-icon">{t.emoji}</div>
             <h2 class="mt-3 font-display text-2xl text-pop-ink">{t.title}</h2>
             <p class="mt-3 text-pop-ink/80">{t.body}</p>
           </article>

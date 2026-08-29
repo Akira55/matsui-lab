@@ -10,16 +10,16 @@ const { locale, limit } = Astro.props;
 const all = getFeed(locale);
 const items = limit ? all.slice(0, limit) : all;
 
-const tagStyle: Record<FeedTag, { bg: string; label: Record<Locale, string> }> = {
-  paper: { bg: 'bg-pop-blue text-white', label: { en: 'PAPER', ja: '論文' } },
-  talk: { bg: 'bg-pop-cyan text-pop-ink', label: { en: 'TALK', ja: '講演' } },
-  misc: { bg: 'bg-pop-blue-soft text-pop-ink', label: { en: 'MISC', ja: 'MISC' } },
-  award: { bg: 'bg-pop-yellow text-pop-ink', label: { en: 'AWARD', ja: '受賞' } },
-  grant: { bg: 'bg-pop-purple text-white', label: { en: 'GRANT', ja: '助成' } },
-  book: { bg: 'bg-pop-ink text-pop-paper', label: { en: 'BOOK', ja: '書籍' } },
-  service: { bg: 'bg-pop-blue-soft text-pop-ink', label: { en: 'SERVICE', ja: '学術貢献' } },
-  media: { bg: 'bg-pop-pink-soft text-pop-ink', label: { en: 'MEDIA', ja: 'メディア' } },
-  lab: { bg: 'bg-pop-cyan-soft text-pop-ink', label: { en: 'LAB', ja: 'ラボ' } },
+const tagStyle: Record<FeedTag, { label: Record<Locale, string> }> = {
+  paper: { label: { en: 'PAPER', ja: '論文' } },
+  talk: { label: { en: 'TALK', ja: '講演' } },
+  misc: { label: { en: 'MISC', ja: 'その他' } },
+  award: { label: { en: 'AWARD', ja: '受賞' } },
+  grant: { label: { en: 'GRANT', ja: '助成' } },
+  book: { label: { en: 'BOOK', ja: '書籍' } },
+  service: { label: { en: 'SERVICE', ja: '学術貢献' } },
+  media: { label: { en: 'MEDIA', ja: 'メディア' } },
+  lab: { label: { en: 'LAB', ja: '研究室' } },
 };
 ---
 
@@ -32,7 +32,7 @@ const tagStyle: Record<FeedTag, { bg: string; label: Record<Locale, string> }> =
           <time class="font-display text-sm tabular-nums text-pop-ink/70" datetime={item.date}>
             {item.date}
           </time>
-          <span class:list={['rounded-full border-2 border-pop-ink px-2 py-0.5 font-display text-[10px] tracking-wide', t.bg]}>
+          <span class:list={['feed-tag', `feed-tag-${item.tag}`]}>
             {t.label[locale]}
           </span>
         </div>

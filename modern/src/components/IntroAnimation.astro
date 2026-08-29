@@ -1,0 +1,188 @@
+---
+// Full-viewport one-shot intro animation. Pure CSS — no JS. Plays once per page load,
+// then sets visibility:hidden via animation-fill-mode so it stops capturing clicks.
+//
+// Total wall time: ~1.6s. Tune with --intro-duration below.
+import { site } from '../data/site';
+import type { Locale } from '../data/site';
+import { u } from '../lib/url';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const charSrc = u('/charactor.png');
+
+// Burst sparkles fired during the wipe.
+const burstColors = ['#ffd23f', '#ff5d8f', '#23d3e8', '#7c5cff', '#ffffff'];
+const burstGlyphs = ['✦', '✧', '★', '✨'];
+const burstCount = 22;
+const burst = Array.from({ length: burstCount }, (_, i) => ({
+  top: Math.random() * 100,
+  left: Math.random() * 100,
+  size: 1.2 + Math.random() * 2.4, // rem
+  delay: 0.45 + Math.random() * 0.55, // seconds (within intro window)
+  duration: 0.7 + Math.random() * 0.5,
+  color: burstColors[i % burstColors.length],
+  glyph: burstGlyphs[i % burstGlyphs.length],
+  rotate: Math.random() * 360,
+}));
+---
+
+<div class="intro" aria-hidden="true">
+  <!-- Cyan back wipe -->
+  <div class="intro-stripe intro-stripe-back" style="--delay: 0s; --bg: #23d3e8;"></div>
+  <!-- Blue front wipe carrying the character + label -->
+  <div class="intro-stripe intro-stripe-front" style="--delay: 0.18s; --bg: #2563eb;">
+    <div class="intro-stripe-inner">
+      <img src={charSrc} alt="" class="intro-char" />
+      <div class="intro-text">
+        <span class="intro-eyebrow">{locale === 'ja' ? 'ようこそ' : 'Welcome'}</span>
+        <span class="intro-title">{site.labName[locale]}</span>
+      </div>
+    </div>
+  </div>
+  <!-- Burst sparkles -->
+  {burst.map((s) => (
+    <span
+      class="intro-burst"
+      style={`top:${s.top}%;left:${s.left}%;font-size:${s.size}rem;color:${s.color};animation-delay:${s.delay}s;animation-duration:${s.duration}s;--rot:${s.rotate}deg;`}
+    >{s.glyph}</span>
+  ))}
+</div>
+
+<!-- Mark intro as played so subsequent visits skip it. Key matches the inline
+     check in Layout.astro <head>; bump the version to replay for everyone. -->
+<script is:inline>
+  try { localStorage.setItem('matlab-intro-played-v1', 'true'); } catch (e) {}
+</script>
+
+<style is:global>
+  :root {
+    --intro-duration: 1.6s;
+  }
+
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    overflow: hidden;
+    animation: intro-overlay var(--intro-duration) linear forwards;
+  }
+
+  @keyframes intro-overlay {
+    0%, 95% { visibility: visible; }
+    100%    { visibility: hidden; }
+  }
+
+  .intro-stripe {
+    position: absolute;
+    top: 0;
+    left: -10%;
+    width: 120%;
+    height: 100%;
+    background: var(--bg);
+    transform: translateX(-110%);
+    animation: intro-wipe var(--intro-duration) cubic-bezier(0.7, 0, 0.15, 1) forwards;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes intro-wipe {
+    0%   { transform: translateX(-110%); }
+    35%  { transform: translateX(0%); }
+    65%  { transform: translateX(0%); }
+    100% { transform: translateX(110%); }
+  }
+
+  .intro-stripe-front {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .intro-stripe-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: intro-content var(--intro-duration) ease forwards;
+    animation-delay: 0.35s;
+  }
+
+  @keyframes intro-content {
+    0%   { opacity: 0; transform: translateY(8px); }
+    30%  { opacity: 1; transform: translateY(0); }
+    65%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-8px); }
+  }
+
+  .intro-char {
+    width: clamp(120px, 22vw, 220px);
+    height: auto;
+    filter: drop-shadow(4px 4px 0 #0b1d44);
+    animation: intro-char-bounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.4s;
+    transform: scale(0.6) rotate(-8deg);
+    opacity: 0;
+  }
+
+  @keyframes intro-char-bounce {
+    0%   { transform: scale(0.4) rotate(-12deg); opacity: 0; }
+    60%  { transform: scale(1.08) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg);    opacity: 1; }
+  }
+
+  .intro-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+  }
+
+  .intro-eyebrow {
+    font-family: 'Hachi Maru Pop', 'Yusei Magic', sans-serif;
+    font-size: clamp(0.9rem, 2.4vw, 1.2rem);
+    background: #ffd23f;
+    color: #0b1d44;
+    border: 3px solid #0b1d44;
+    box-shadow: 4px 4px 0 #0b1d44;
+    border-radius: 999px;
+    padding: 0.25rem 0.9rem;
+    letter-spacing: 0.05em;
+  }
+
+  .intro-title {
+    margin-top: 0.7rem;
+    font-family: 'Bagel Fat One', 'Hachi Maru Pop', sans-serif;
+    font-size: clamp(2rem, 6.5vw, 4.5rem);
+    color: #fff;
+    text-shadow: 4px 4px 0 #0b1d44;
+    letter-spacing: 0.02em;
+  }
+
+  .intro-burst {
+    position: absolute;
+    text-shadow: 2px 2px 0 #0b1d44;
+    opacity: 0;
+    line-height: 1;
+    animation-name: intro-burst-pop;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+  }
+
+  @keyframes intro-burst-pop {
+    0%   { opacity: 0; transform: scale(0.2) rotate(0deg); }
+    35%  { opacity: 1; transform: scale(1.4) rotate(calc(var(--rot) * 0.4)); }
+    65%  { opacity: 1; transform: scale(1.0) rotate(calc(var(--rot) * 0.7)); }
+    100% { opacity: 0; transform: scale(1.6) rotate(var(--rot)) translateY(20px); }
+  }
+
+  /* Skip the intro entirely if user prefers reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .intro { display: none; }
+  }
+</style>

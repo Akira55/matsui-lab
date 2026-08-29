@@ -5,7 +5,6 @@ import { site } from '../../data/site';
 import { awards, grants } from '../../data/awards';
 import { service } from '../../data/service';
 import { books } from '../../data/publications';
-import Sparkle from '../../components/Sparkle.astro';
 import ProfileLinks from '../../components/ProfileLinks.astro';
 import { u } from '../../lib/url';
 
@@ -20,12 +19,12 @@ const sections = [
 
 <Layout locale="ja" current="publications" title="論文">
   <section class="container-page section">
-    <p class="heading-eyebrow">Publications</p>
+    <p class="heading-eyebrow">論文フォルダ</p>
     <h1 class="heading-display mt-4">
-      <span class="bg-pop-yellow text-pop-ink px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">論文</span>・書籍・受賞・科研費
+      <span class="bg-pop-yellow text-pop-ink px-2 inline-block border-[3px] border-pop-ink">論文</span>・書籍・受賞・科研費
     </h1>
     <p class="mt-6 max-w-2xl text-pop-ink/80">
-      査読付き論文・書籍・受賞・助成のみを掲載しています。講演は
+      このフォルダには、査読付き論文・書籍・受賞・助成の書類を収録しています。講演は
       <a class="link" href={u('/ja/talks/')}>講演ページ</a>、
       コラム・プレプリント・WPは
       <a class="link" href={u('/ja/misc/')}>MISCページ</a>
@@ -88,7 +87,7 @@ const sections = [
 
     <section id="awards" class="mt-16 scroll-mt-24">
       <div class="flex items-baseline gap-3">
-        <h2 class="font-display text-3xl">受賞 <Sparkle class="h-6 w-6 align-baseline" /></h2>
+        <h2 class="font-display text-3xl">受賞 <span class="mac-heading-glyph" aria-hidden="true">✦</span></h2>
         <span class="h-[3px] flex-1 bg-pop-ink"></span>
       </div>
       <ul class="mt-5 grid gap-3">

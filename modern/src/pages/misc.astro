@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MiscList from '../components/MiscList.astro';
+import { site } from '../data/site';
+import { misc } from '../data/misc';
+---
+
+<Layout
+  locale="en"
+  current="publications"
+  title="MISC"
+  description="Columns, preprints, working papers, and reports"
+>
+  <section class="container-page section">
+    <p class="heading-eyebrow">MISC</p>
+    <h1 class="heading-display mt-4">
+      Columns, <span class="bg-pop-purple text-white px-2 -rotate-1 inline-block border-[3px] border-pop-ink rounded-xl shadow-sticker">preprints</span> & WPs
+    </h1>
+    <p class="mt-6 max-w-2xl text-pop-ink/80">
+      Magazine columns (経済セミナー), arXiv preprints, working papers, and conference reports —
+      {misc.length} entries. Full list on
+      <a class="link" href={site.socials.researchmap}>researchmap</a>.
+    </p>
+
+    <div class="mt-12">
+      <MiscList locale="en" />
+    </div>
+  </section>
+</Layout>

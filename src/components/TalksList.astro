@@ -16,11 +16,11 @@ const years = Object.keys(grouped)
   .map(Number)
   .sort((a, b) => b - a);
 
-const typeChip: Record<string, { label: Record<Locale, string>; bg: string }> = {
-  invited: { label: { en: 'invited', ja: '招待' }, bg: 'bg-pop-yellow text-pop-ink' },
-  oral: { label: { en: 'oral', ja: '口頭' }, bg: 'bg-pop-blue-soft' },
-  poster: { label: { en: 'poster', ja: 'ポスター' }, bg: 'bg-pop-cyan-soft' },
-  keynote: { label: { en: 'keynote', ja: '基調' }, bg: 'bg-pop-pink text-white' },
+const typeChip: Record<string, { label: Record<Locale, string> }> = {
+  invited: { label: { en: 'invited', ja: '招待' } },
+  oral: { label: { en: 'oral', ja: '口頭' } },
+  poster: { label: { en: 'poster', ja: 'ポスター' } },
+  keynote: { label: { en: 'keynote', ja: '基調' } },
 };
 ---
 
@@ -39,7 +39,7 @@ const typeChip: Record<string, { label: Record<Locale, string>; bg: string }> = 
               <div class="flex flex-wrap items-center gap-3">
                 <time class="font-display text-sm tabular-nums text-pop-ink/70" datetime={t.date}>{t.date}</time>
                 {chip && (
-                  <span class:list={['rounded-full border-2 border-pop-ink px-2 py-0.5 font-display text-[10px] tracking-wide', chip.bg]}>
+                  <span class:list={['talk-tag', `talk-tag-${t.type}`]}>
                     {chip.label[locale]}
                   </span>
                 )}

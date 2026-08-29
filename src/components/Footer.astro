@@ -1,42 +1,17 @@
 ---
 import type { Locale } from '../data/site';
 import { site } from '../data/site';
-
-interface Props {
-  locale: Locale;
-}
+interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
-
-const marqueeText =
-  locale === 'ja'
-    ? '✦ 計算社会科学 ✦ ウェブ情報学 ✦ ウィキペディア ✦ 経済政策 ✦ NLP ✦ オンライン行動'
-    : '✦ Computational Social Science ✦ Web Information Studies ✦ Wikipedia ✦ Economic Policy ✦ NLP ✦ Online Behavior';
 ---
 
-<footer class="border-t-[3px] border-pop-ink bg-pop-ink text-pop-paper">
-  <!-- Marquee tape -->
-  <div class="overflow-hidden border-b-[3px] border-pop-ink bg-pop-yellow text-pop-ink">
-    <div class="flex w-[200%] animate-marquee whitespace-nowrap py-2 font-display text-base">
-      <span class="px-4">{marqueeText}</span>
-      <span class="px-4">{marqueeText}</span>
-    </div>
-  </div>
-
-  <div class="container-page flex flex-col gap-6 py-10 sm:flex-row sm:items-end sm:justify-between">
-    <div>
-      <p class="font-display text-2xl text-pop-paper">{site.labName[locale]}</p>
-      <p class="mt-1 text-sm text-pop-paper/70">{site.affiliation[locale]}</p>
-    </div>
-    <div class="flex flex-wrap items-center gap-3 text-sm">
-      <a class="rounded-full border-2 border-pop-paper px-3 py-1.5 font-display hover:bg-pop-blue hover:border-pop-blue" href={site.socials.researchmap}>researchmap</a>
-      <a class="rounded-full border-2 border-pop-paper px-3 py-1.5 font-display hover:bg-pop-cyan hover:border-pop-cyan hover:text-pop-ink" href={site.socials.kobe}>Kobe U</a>
-      <a class="rounded-full border-2 border-pop-paper px-3 py-1.5 font-display hover:bg-pop-yellow hover:border-pop-yellow hover:text-pop-ink" href={site.contactForm}>contact</a>
-    </div>
-  </div>
-  <div class="border-t border-pop-paper/20">
-    <div class="container-page py-4 text-xs text-pop-paper/50">
-      © {year} {site.labName[locale]} · Made with ♥ in Kobe
-    </div>
-  </div>
+<footer class="mac-statusbar">
+  <span>{locale === 'ja' ? '松井研究室ディスクは使用できます' : 'Matsui Lab Disk is ready'}</span>
+  <nav aria-label="External links">
+    <a href={site.socials.researchmap}>researchmap</a>
+    <a href={site.socials.kobe}>Kobe U</a>
+    <a href={site.contactForm}>{locale === 'ja' ? 'お問い合わせ…' : 'Contact…'}</a>
+  </nav>
+  <span class="resize-handle" aria-hidden="true">◢</span>
 </footer>
