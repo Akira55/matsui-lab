@@ -1,4 +1,5 @@
 ---
+import { tr } from '../data/translations';
 import type { Locale } from '../data/site';
 import { talks } from '../data/talks';
 
@@ -52,14 +53,14 @@ const typeChip: Record<string, { label: Record<Locale, string>; bg: string }> = 
                     rel="noopener noreferrer"
                     class="decoration-pop-yellow decoration-2 underline-offset-4 hover:underline hover:text-pop-blue"
                   >
-                    {t.title}
+                    {tr(t.title, locale)}
                     <span aria-hidden="true" class="ml-1 text-pop-blue">↗</span>
                   </a>
                 ) : (
-                  t.title
+                  tr(t.title, locale)
                 )}
               </p>
-              {t.venue && <p class="mt-1 text-sm italic text-pop-ink/70">{t.venue}</p>}
+              {tr(t.venue, locale) && <p class="mt-1 text-sm italic text-pop-ink/70">{tr(t.venue, locale)}</p>}
             </li>
           );
         })}
