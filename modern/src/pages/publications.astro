@@ -1,4 +1,5 @@
 ---
+import { en } from '../data/translations';
 import Layout from '../layouts/Layout.astro';
 import PublicationList from '../components/PublicationList.astro';
 import { site } from '../data/site';
@@ -73,13 +74,13 @@ const sections = [
               <p class="font-display text-base">
                 {b.url ? (
                   <a href={b.url} target="_blank" rel="noopener noreferrer" class="hover:underline decoration-pop-yellow decoration-2 underline-offset-4">
-                    {b.title} <span class="text-pop-blue" aria-hidden="true">↗</span>
+                    {en(b.title)} <span class="text-pop-blue" aria-hidden="true">↗</span>
                   </a>
                 ) : (
-                  b.title
+                  en(b.title)
                 )}
               </p>
-              <p class="text-sm text-pop-ink/70">{b.role} · {b.publisher} · {b.year}</p>
+              <p class="text-sm text-pop-ink/70">{en(b.role)} · {en(b.publisher)} · {b.year}</p>
             </li>
           ))}
         </ul>
@@ -99,14 +100,14 @@ const sections = [
               <span class="font-display">
                 {a.url ? (
                   <a href={a.url} target="_blank" rel="noopener noreferrer" class="hover:underline decoration-pop-blue decoration-2 underline-offset-4">
-                    {a.title} <span class="text-pop-blue" aria-hidden="true">↗</span>
+                    {en(a.title)} <span class="text-pop-blue" aria-hidden="true">↗</span>
                   </a>
                 ) : (
-                  a.title
+                  en(a.title)
                 )}
               </span>
             </div>
-            {a.org && <p class="text-sm text-pop-ink/70">{a.org}</p>}
+            {a.org && <p class="text-sm text-pop-ink/70">{en(a.org)}</p>}
           </li>
         ))}
       </ul>
@@ -122,18 +123,18 @@ const sections = [
           <li class="sticker-sm bg-pop-cyan-soft p-4">
             <div class="flex flex-wrap items-baseline gap-3">
               <span class="font-display text-sm tabular-nums">{g.period}</span>
-              <span class="chip bg-white">{g.role}</span>
+              <span class="chip bg-white">{en(g.role)}</span>
             </div>
             <p class="mt-1 font-display">
               {g.url ? (
                 <a href={g.url} target="_blank" rel="noopener noreferrer" class="hover:underline decoration-pop-blue decoration-2 underline-offset-4">
-                  {g.title} <span class="text-pop-blue" aria-hidden="true">↗</span>
+                  {en(g.title)} <span class="text-pop-blue" aria-hidden="true">↗</span>
                 </a>
               ) : (
-                g.title
+                en(g.title)
               )}
             </p>
-            <p class="text-sm text-pop-ink/70">{g.funder}</p>
+            <p class="text-sm text-pop-ink/70">{en(g.funder)}</p>
           </li>
         ))}
       </ul>
@@ -150,18 +151,18 @@ const sections = [
             <li class="sticker-sm bg-pop-blue-soft p-4">
               <div class="flex flex-wrap items-baseline gap-3">
                 <span class="font-display text-sm tabular-nums">{s.endDate ? `${s.year}–${s.endDate.slice(0, 4)}` : s.year}</span>
-                {s.roles && <span class="chip bg-white">{s.roles}</span>}
+                {s.roles && <span class="chip bg-white">{en(s.roles)}</span>}
               </div>
               <p class="mt-1 font-display">
                 {s.url ? (
                   <a href={s.url} target="_blank" rel="noopener noreferrer" class="hover:underline decoration-pop-blue decoration-2 underline-offset-4">
-                    {s.title} <span class="text-pop-blue" aria-hidden="true">↗</span>
+                    {en(s.title)} <span class="text-pop-blue" aria-hidden="true">↗</span>
                   </a>
                 ) : (
-                  s.title
+                  en(s.title)
                 )}
               </p>
-              {s.promoter && <p class="text-sm text-pop-ink/70">{s.promoter}</p>}
+              {s.promoter && <p class="text-sm text-pop-ink/70">{en(s.promoter)}</p>}
             </li>
           ))}
         </ul>

@@ -1,7 +1,8 @@
 // Unified, date-sorted activity feed. Sources: hand-written news + papers + talks + misc + awards + grants + books.
 //
-// Items keep their researchmap-original titles (no translation). The locale parameter
-// is only used to translate auxiliary text (bodies on manual news, type labels).
+// Items keep their researchmap-original titles unless translations.ts has an English
+// rendering, which is used on the English feed. The locale parameter also translates
+// auxiliary text (bodies on manual news, type labels).
 
 import type { Locale } from './site';
 import { news } from './news';
@@ -10,6 +11,7 @@ import { talks } from './talks';
 import { misc } from './misc';
 import { awards, grants } from './awards';
 import { service } from './service';
+import { tr } from './translations';
 
 export type FeedTag =
   | 'paper'
@@ -64,8 +66,8 @@ export function getFeed(locale: Locale): FeedItem[] {
   for (const p of publications) {
     items.push({
       date: pubDate(p),
-      title: p.title,
-      meta: joinMeta(p.authors, p.venue),
+      title: tr(p.title, locale),
+      meta: joinMeta(tr(p.authors, locale), tr(p.venue, locale)),
       tag: 'paper',
       url: p.url,
     });
@@ -74,8 +76,8 @@ export function getFeed(locale: Locale): FeedItem[] {
   for (const t of talks) {
     items.push({
       date: t.date,
-      title: t.title,
-      meta: joinMeta(t.venue),
+      title: tr(t.title, locale),
+      meta: joinMeta(tr(t.venue, locale)),
       tag: 'talk',
       url: t.url,
     });
@@ -84,8 +86,8 @@ export function getFeed(locale: Locale): FeedItem[] {
   for (const m of misc) {
     items.push({
       date: pubDate(m),
-      title: m.title,
-      meta: joinMeta(m.authors, m.venue),
+      title: tr(m.title, locale),
+      meta: joinMeta(tr(m.authors, locale), tr(m.venue, locale)),
       tag: 'misc',
       url: m.url,
     });
@@ -94,8 +96,8 @@ export function getFeed(locale: Locale): FeedItem[] {
   for (const a of awards) {
     items.push({
       date: pubDate(a),
-      title: a.title,
-      meta: joinMeta(a.org),
+      title: tr(a.title, locale),
+      meta: joinMeta(tr(a.org, locale)),
       tag: 'award',
       url: a.url,
     });
@@ -105,8 +107,8 @@ export function getFeed(locale: Locale): FeedItem[] {
     const startYear = Number(g.period.slice(0, 4));
     items.push({
       date: `${startYear}-04-01`,
-      title: g.title,
-      meta: joinMeta(g.role, g.funder, g.period),
+      title: tr(g.title, locale),
+      meta: joinMeta(tr(g.role, locale), tr(g.funder, locale), tr(g.period, locale)),
       tag: 'grant',
       url: g.url,
     });
@@ -115,8 +117,8 @@ export function getFeed(locale: Locale): FeedItem[] {
   for (const b of books) {
     items.push({
       date: pubDate(b),
-      title: b.title,
-      meta: joinMeta(b.role, b.publisher),
+      title: tr(b.title, locale),
+      meta: joinMeta(tr(b.role, locale), tr(b.publisher, locale)),
       tag: 'book',
       url: b.url,
     });
@@ -125,8 +127,8 @@ export function getFeed(locale: Locale): FeedItem[] {
   for (const s of service) {
     items.push({
       date: pubDate(s),
-      title: s.title,
-      meta: joinMeta(s.roles, s.promoter),
+      title: tr(s.title, locale),
+      meta: joinMeta(tr(s.roles, locale), tr(s.promoter, locale)),
       tag: 'service',
       url: s.url,
     });
