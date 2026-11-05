@@ -17,6 +17,14 @@ export type MiscItem = {
 export const misc: MiscItem[] = [
   {
     year: 2026,
+    date: "2026-11",
+    type: "working-paper",
+    authors: "松井 暉, 小井土 大, 竹村 彰浩, et al.",
+    title: "人工知能学会 若手交流会：失敗談から学ぶ研究プロセス",
+    venue: "人工知能学会誌",
+  },
+  {
+    year: 2026,
     date: "2026-07",
     type: "preprint",
     authors: "Matsui, A.",
